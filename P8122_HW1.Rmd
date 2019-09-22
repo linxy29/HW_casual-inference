@@ -1,0 +1,112 @@
+---
+title: "Homework 1"
+author: Xinyi Lin xl2836
+output:
+  word_document: default
+  pdf_document: default
+---
+
+## Question 1
+
+### Problem a
+
+For individual 1:$Y_1(1)-Y_0(1)=0-0=0$. Interpretation: Comparing with treatment 0, treatment 1 has no effect on the individual 1.
+
+For individual 2:$Y_1(2)-Y_0(2)=0-1=-1$. Interpretation: Comparing with treatment 0, treatment 1 has negative effect on the individual 2.
+
+For individual 3:$Y_1(3)-Y_0(3)=1-0=1$. Interpretation: Comparing with treatment 0, treatment 1 has positive effect on the individual 3.
+
+For individual 4:$Y_1(4)-Y_0(4)=0-1=-1$. Interpretation: Comparing with treatment 0, treatment 1 has negative effect on the individual 4.
+
+For individual 5:$Y_1(5)-Y_0(5)=0-1=-1$. Interpretation: Comparing with treatment 0, treatment 1 has negative effect on the individual 5.
+
+For individual 6:$Y_1(6)-Y_0(6)=1-0=1$. Interpretation: Comparing with treatment 0, treatment 1 has positive effect on the individual 6.
+
+For individual 7:$Y_1(7)-Y_0(7)=0-1=-1$. Interpretation: Comparing with treatment 0, treatment 1 has negative effect on the individual 7.
+
+For individual 8:$Y_1(8)-Y_0(8)=0-0=0$. Interpretation: Comparing with treatment 0, treatment 1 has no effect on the individual 8.
+
+### Problem b 
+
+The average casual effect of treatment is $E[Y_1]-E[Y_0]=\frac{2}{8}-\frac{4}{8}=-\frac{1}{4}$. Interpretation: Comparing with treatment 0, on average, treatment 1 has negative effect on outcomes.
+
+
+### Problem c
+
+We can find that $E[Y=1|A=1]=\frac{1}{4}$and$E[Y=1|A=0]=\frac{3}{4}$, so$E[Y=1|A=1]\neq E[Y=1|A=0]$ and treatments and outcomes are associated. 
+
+Comparing with the average causal effect, the value of association measurement $E[Y=1|A=1]- E[Y=1|A=0]=-\frac{1}{2}$ are smaller. But this association measurement might be influenced by other confounders and cannot fully reflect casual relationship.
+
+### Problem d
+
+```{r}
+set.seed(12)
+rbinom(8,1,0.5)
+```
+
+Using `rbinom` function in R, I randomly assigned individuals 2, 3, 8 to treatment 1.We can find that $E[Y=1|A=1]=\frac{1}{3}$and$E[Y=1|A=0]=\frac{3}{5}$, so$E[Y=1|A=1]\neq E[Y=1|A=0]$ and treatments and outcomes are associated. 
+
+The value of association measurement $E[Y=1|A=1]- E[Y=1|A=0]=-\frac{4}{15}$ are not equal to the average causal effect. This association measurement might be influenced by other confounders and cannot fully reflect casual relationship.
+
+## Question 2
+
+### Problem a
+
+The units are this patient in specific time period when she takes same does of medication(from first test to second test or from second test to third test).
+
+### Problem b
+
+Treatments are different does levels(low dose or high dose). 
+
+### Problem c
+
+Potential outcomes are low level of the patient's blood pressure, high level of the patient's blood pressure and perfect blood pressure level. Let perfect blood pressure level = 1 in the following problems.
+
+### Problem d
+
+Assume the patient in time period when she took the high dose medication is unit 1 and the time period when the patient took the low dose medication is unit 2. The result of unit 1 is 0 as the patient's blood pressure is too high and the result of unit 2 is 1 as the patient's blood pressure is perfect.
+
+So the causal effect is $Y_2-Y_1=1-0=1$ which means the patient should remain on the low dose.
+
+### Problem e
+
+The SUTVA assumption:
+
+1. The intervention is well defined and therefore there is only one version of the potential outcome.
+
+2. A person's outcome is not influenced by another person's exposure or treatment.
+
+I think both assumptions are not hold in this case. As in this case, high dose medication and low dose medication are not specify, the assumption 1 is not plausible. Besides, what this patient took in previous time period might influence her blood pressure in the following time period.
+
+In other to make SUTVA plausible, we need to assume that both high dose medication and low dose medication are standard and this patient's blood pressure only depends on her current medication.
+
+### Problem f
+
+Only with SUTVA and other assumptions including consistency assumption and randomization assumption, we can use $E(Y|A=a)$ to approximate $E(Y_a)$ to calculate causal effect so that we can get conclusions about casual effect.
+
+### Problem g
+
+Probabilistic: This assignment mechanism is not probabilistics as when the patient's blood pressure is too low, she can only take high dose of medication.
+
+Individualistic: This assignment machanism is not individualistic as the treatment of unit 2 is influenced by the outcomes of unit 1.
+
+Unconfounded: This assignment machanism is confounded, because the physician already has some basic knowledge about the patient, his or her descisions might be influenced.
+
+Controlled: 
+
+If controlled means the doctor know the assignment mechanism exactly, then this assignment mechanism is controlled as it is assigned based on the patient's blood pressure.
+
+If controlled means the doctor know the treatment exactly, then this assignment mechanism is uncontrolled as the treatment in the previous period might influences actual treatment in the following period. 
+
+### Problem h
+
+According to the blood pressure levels of this patient in each test, it is hard to assign this study differently because the medication she takes should based on her test results. However, if we assume no matter what kind of medications this patient takes, it is reasonable and she will be better, we can assign medication in this study through following steps:
+
+1. First, check the physical status of this patient and record them.
+
+2. Then, randomly assign one treatment to this patient and ask her to be re-tested after a month. 
+
+3. After re-test, wait some time until she has the same physical status as beginning(based on the physical record in step 1), assign her another treatment.
+
+4. Test the outcome after a month and compare these two outcome.
+
