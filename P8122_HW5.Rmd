@@ -1,0 +1,318 @@
+---
+title: "Homework 5"
+author: "Xinyi Lin"
+date: "10/13/2019"
+output: word_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r, message=FALSE}
+library(ggdag)
+library(mlogit)
+library(dplyr)
+library(tableone)
+library(personalized)
+```
+
+```{r}
+redata = read.csv("./hw5_data.csv")
+```
+
+## Question 1
+
+The treatment is `treat`, the outcome is `re78` and cofounders are `age`, `educ`, `black`, `hispan`, `married`, `nodegree`, `re74`, `re75`.The treatment has casual effect on the outcome and confounders have casual effect on both the treatment and the outcome.
+
+```{r, fig.height=9, fig.width=14}
+# Question 1
+tidy_ggdag <- dagify(re78 ~ treat + age + educ + black + hispan + married + nodegree + re74 + re75,
+             treat ~ age + educ + black + hispan + married + nodegree + re74 + re75,
+             exposure = "treat",
+             outcome = "y") %>% tidy_dagitty()
+ggdag(tidy_ggdag) 
+```
+
+## Question 2
+
+```{r}
+# Question 2
+q2_data = redata %>% 
+  mutate(treat = as.factor(treat),
+         black = as.factor(black),
+         hispan = as.factor(hispan),
+         married = as.factor(married),
+         nodegree = as.factor(nodegree))
+```
+
+```{r}
+vars = c("age", "educ", "black", "hispan", "married", "nodegree", "re74", "re75")
+
+## Construct a table
+cov_bal <- CreateTableOne(vars = vars, strata = "treat", data = q2_data, test = FALSE)
+
+## Show table with SMD
+print(cov_bal, smd = TRUE)
+```
+
+The covariate balance table is shown as above. SMD means standardized mean difference. We want SMDs are smaller than 0.2. However, according to the table above, we can find out that except for educ, SMDs are larger than 0.2, which means covariates are not balanced.
+
+## Question 3
+
+```{r}
+# Question 3
+ps.model<-glm(treat~age + educ + black + hispan + married + nodegree + re74 + re75,data=q2_data, family = binomial)
+summary(ps.model)
+```
+
+The propensity score is shown above. 
+
+## Question 4
+
+```{r}
+# Question 4
+# propensity score of each unit
+ps <- predict(ps.model, type="response")
+
+x = q2_data
+
+prop.func <- function(x, trt){
+  # fit propensity score model
+  propens.model <- glm(trt~age + educ + black + hispan + married + nodegree + re74 + re75, data=x, family = binomial)
+  pi.x <- predict(propens.model, type = "response")
+  pi.x
+}
+
+# now add density plot with histogram
+check.overlap(x = x,
+              trt = q2_data$treat,
+              type = "both",
+              propensity.func = prop.func)
+```
+
+Distributions of propensity score in two treatment groups are shown above. We can find that for those propensity scores that are close to 1, two distributions not overlap. We need to trim data. 
+
+Eliminate controls for whom the P(A=1|C) is less than the min(P(A=1|C)) found in the treated group and eliminate treated for whom the P(A=1|C) is greater than the max(P(A=1|C)) found in the control group.
+
+```{r}
+trim_data = x[ps>=min(ps[q2_data$treat==1]) & ps <= max(ps[q2_data$treat==0]),] 
+```
+
+There are `r dim(q2_data)[1]-dim(trim_data)[1]` observations have been eliminated and there are `r dim(trim_data)[1]` observations left.
+
+Trimming can improve covariate balance, improving internal validity, so efficiency is improved. But trimming will hurts external validity(generalizability).
+
+```{r}
+ps.model<-glm(treat~age + educ + black + hispan + married + nodegree + re74 + re75, data=trim_data, family = binomial)
+summary(ps.model)
+
+ps <- predict(ps.model, type="response") #gets the propensity scores for each unit, based on the model
+
+x = trim_data
+
+# now add density plot with histogram
+check.overlap(x = x,
+              trt = trim_data$treat,
+              type = "both",
+              propensity.func = prop.func)
+```
+
+Distributions of propensity score of trimmed data is shown above, we can find that distributions overlap better which means balance of covariates improve.
+
+## Question 5
+
+The table for covariate balance is as following. We can find that balance among covariate is improved as SMD decrease and SMD of age, educ, nodegree are less than 0.2.
+
+```{r}
+# Question 5
+## Construct a table
+cov_bal <- CreateTableOne(vars = vars, strata = "treat", data = trim_data, test = FALSE)
+
+## Show table with SMD
+print(cov_bal, smd = TRUE)
+```
+
+The propensity score of trimmed data is as following.
+
+```{r}
+ps.model<-glm(treat~age + educ + black + hispan + married + nodegree + re74 + re75, data=trim_data, family = binomial)
+summary(ps.model)
+
+ps <- predict(ps.model, type="response") #gets the propensity scores for each unit, based on the model
+```
+
+## Question 6
+
+```{r}
+# Question 6
+#creating subclasses
+subclass.breaks = quantile(ps, c(.20, .40, .60, .80)) # bins (initial try - modify as needed)
+subclass.breaks
+subclass = ps
+subclass = as.numeric(ps>subclass.breaks[1])
+subclass[which(ps>subclass.breaks[1]& ps<=subclass.breaks[2])]<- 1
+subclass[which(ps>subclass.breaks[2]& ps<=subclass.breaks[3])]<- 2
+subclass[which(ps>subclass.breaks[3]& ps<=subclass.breaks[4])]<- 3
+subclass[which(ps>subclass.breaks[4])]<- 4
+#looking at sample sizes within each subclass
+
+table(trim_data$treat, subclass)
+```
+
+I choose 20%, 40%, 60% and 80% quantiles as breaks. Breaks are 0.05923431, 0.10473370, 0.43605402, 0.66770086.
+
+```{r}
+#looking at propensity scores within subclasses
+prop.func <- function(x, trt) {
+  ps[which(ps <= subclass.breaks[1])]
+}
+trim_data$ps <-ps
+check.overlap(x = trim_data[which(trim_data$ps <=subclass.breaks[1]),],
+              trt = trim_data$treat[which(trim_data$ps <= subclass.breaks[1])],
+              type = "both",
+              propensity.func = prop.func)
+
+
+prop.func <- function(x, trt)
+{
+ 
+  ps[which(ps>subclass.breaks[1]&ps<=subclass.breaks[2])]
+}
+trim_data$ps <-ps
+check.overlap(x = trim_data[which(ps>subclass.breaks[1]&ps<=subclass.breaks[2]),],
+              trt = trim_data$treat[which(ps>subclass.breaks[1]&ps<=subclass.breaks[2])],
+              type = "both",
+              propensity.func = prop.func)
+
+prop.func <- function(x, trt)
+{
+  
+  ps[which(ps>subclass.breaks[2]&ps<=subclass.breaks[3])]
+}
+trim_data$ps <-ps
+check.overlap(x = trim_data[which(ps>subclass.breaks[2]&ps<=subclass.breaks[3]),],
+              trt = trim_data$treat[which(ps>subclass.breaks[2]&ps<=subclass.breaks[3])],
+              type = "both",
+              propensity.func = prop.func)
+
+
+
+ prop.func <- function(x, trt)
+ {
+   
+   ps[which(ps>subclass.breaks[3])]
+ }
+ trim_data$ps <-ps
+ check.overlap(x = trim_data[which(ps>subclass.breaks[3]),],
+               trt = trim_data$treat[which(ps>subclass.breaks[3])],
+               type = "both",
+               propensity.func = prop.func)
+```
+
+Above are plots of propensity scores in each subclass. According to them, we can find that in each subclass, distributions of propensity score overlap better.
+
+```{r}
+tabUnmatched_s0 <- CreateTableOne(vars = vars, strata = "treat", data = trim_data[which(subclass==0),], test = FALSE)
+tabUnmatched_s1 <- CreateTableOne(vars = vars, strata = "treat", data = trim_data[which(subclass==1),], test = FALSE)
+tabUnmatched_s2 <- CreateTableOne(vars = vars, strata = "treat", data = trim_data[which(subclass==2),], test = FALSE)
+tabUnmatched_s3 <- CreateTableOne(vars = vars, strata = "treat", data = trim_data[which(subclass==3),], test = FALSE)
+
+## Show table with SMD
+
+print(tabUnmatched_s0, smd = TRUE)
+print(tabUnmatched_s1, smd = TRUE)
+print(tabUnmatched_s2, smd = TRUE)
+print(tabUnmatched_s3, smd = TRUE)
+```
+
+Above are tables showing covariate balance in each subclass. We can find that SMD are smaller in each subclass, so balance of covariate improve for each subclass.
+
+## Question 7
+
+```{r}
+# Question 7
+#AVERAGE CAUSAL EFFECT WITHIN STRATA
+ACE0 <- mean(trim_data$re78[which(subclass==0 & trim_data$treat==1)])-mean(trim_data$re78[which(subclass==0 & trim_data$treat==0)])
+ACE1 <- mean(trim_data$re78[which(subclass==1 & trim_data$treat==1)])-mean(trim_data$re78[which(subclass==1 & trim_data$treat==0)])
+ACE2 <- mean(trim_data$re78[which(subclass==2 & trim_data$treat==1)])-mean(trim_data$re78[which(subclass==2 & trim_data$treat==0)])
+ACE3 <- mean(trim_data$re78[which(subclass==3 & trim_data$treat==1)])-mean(trim_data$re78[which(subclass==3 & trim_data$treat==0)])
+ACE4 <- mean(trim_data$re78[which(subclass==4 & trim_data$treat==1)])-mean(trim_data$re78[which(subclass==4 & trim_data$treat==0)])
+
+ace <- (nrow(trim_data[which(subclass==0),])/nrow(trim_data))*ACE0+
+  (nrow(trim_data[which(subclass==1),])/nrow(trim_data))*ACE1+
+  (nrow(trim_data[which(subclass==2),])/nrow(trim_data))*ACE2+
+  (nrow(trim_data[which(subclass==3),])/nrow(trim_data))*ACE3+
+  (nrow(trim_data[which(subclass==4),])/nrow(trim_data))*ACE4
+
+
+v01 <- var(trim_data$re78[which(subclass==0 & trim_data$treat==1)])
+v00 <- var(trim_data$re78[which(subclass==0 & trim_data$treat==0)])
+v11 <- var(trim_data$re78[which(subclass==1 & trim_data$treat==1)])
+v10 <- var(trim_data$re78[which(subclass==1 & trim_data$treat==0)])
+v21 <- var(trim_data$re78[which(subclass==2 & trim_data$treat==1)])
+v20 <- var(trim_data$re78[which(subclass==2 & trim_data$treat==0)])
+v31 <- var(trim_data$re78[which(subclass==3 & trim_data$treat==1)])
+v30 <- var(trim_data$re78[which(subclass==3 & trim_data$treat==0)])
+v41 <- var(trim_data$re78[which(subclass==4 & trim_data$treat==1)])
+v40 <- var(trim_data$re78[which(subclass==4 & trim_data$treat==0)])
+
+n0 <- nrow(trim_data[which(subclass==0),])
+n1 <- nrow(trim_data[which(subclass==1),])
+n2 <- nrow(trim_data[which(subclass==2),])
+n3 <- nrow(trim_data[which(subclass==3),])
+n4 <- nrow(trim_data[which(subclass==4),])
+
+n01 <- nrow(trim_data[which(subclass==0& trim_data$treat==1),])
+n11 <- nrow(trim_data[which(subclass==1& trim_data$treat==1),])
+n21 <- nrow(trim_data[which(subclass==2& trim_data$treat==1),])
+n31 <- nrow(trim_data[which(subclass==3& trim_data$treat==1),])
+n41 <- nrow(trim_data[which(subclass==4& trim_data$treat==1),])
+n00 <- nrow(trim_data[which(subclass==0& trim_data$treat==0),])
+                                        
+n10 <- nrow(trim_data[which(subclass==1& trim_data$treat==0),])
+n20 <- nrow(trim_data[which(subclass==2& trim_data$treat==0),])
+n30 <- nrow(trim_data[which(subclass==3& trim_data$treat==0),])
+n40 <- nrow(trim_data[which(subclass==4& trim_data$treat==0),])
+                                            
+varace <-(n1)^2/nrow(trim_data)^2*((v11/n11)+(v10/n10))+(n2)^2/nrow(trim_data)^2*((v21/n21)+(v20/n20))+(n3)^2/nrow(trim_data)^2*((v31/n31)+(v30/n30))+(n4)^2/nrow(trim_data)^2*((v41/n41)+(v40/n40))+(n0)^2/nrow(trim_data)^2*((v01/n01)+(v00/n00))
+
+sdace<-sqrt(varace)
+
+CIL=ace-sdace*2
+CIU=ace+sdace*2
+
+z = (ace-0)/sdace
+pvale = pnorm(z, lower.tail = FALSE)
+```
+
+The point estimate of the marginal average causal effect is `r round(ace,3)`. The confidence interval is (`r round(CIL,3)`, `r round(CIU,3)`). Assuming $z = \frac{v_{ACE}-0}{sd_{ACE}}$ follows normal distribution, then the p-value is `r round(pvale, 3)`.
+
+As the p-value is larger than 0.05 and the confidence interval contains 0, there is no marginal causal effect between job training and the income in 1978. With 95% confidence, we can conculde that the true marginal causal effect lies between `r round(CIL,3)` and `r round(CIU,3)`.
+
+## Question 8
+
+```{r}
+# Question 8
+lm_model = lm(re78~treat + age + educ + black + hispan + married + nodegree + re74 + re75, data=q2_data)
+summary(lm_model)
+confint(lm_model)
+```
+
+According to results above, we can find that p-value of variable `treat` is 0.048 which is smalller than 0.05, thus we can reject the null hypothesis and conclude that there exists marginal causal effect.
+
+Compared to people who did not receive job training, the average income of people who receive job training in 1978 is 1548 higher.  
+
+With 95% confidence, we can conculde that the true marginal causal effect lies between 13.88991 and 3082.5976942.
+
+Compred to results in question 7, we can find that the p-value in question 7 is larger. It is larger than 0.05, which means there is no significant marginal causal effect of treat. The marginal causal effect in question 7 is smaller. Two methods give different conclusions. 
+
+## Question 9
+
+For the regression based approach to confounding adjustment, the advantage is that it is easy to get point estimate and p-value of marginal average causal effect and the disadvantage is that it might not adjust confounders properly, because it ignores whether treatment group and control group is comparable. 
+
+For the subclassification approach, the advantage is that it allows treatment group and control group comparable in each subgroup and the disadvantage is that we need to do multiple steps to get results.
+
+**Appendix**
+
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+```

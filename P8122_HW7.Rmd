@@ -1,0 +1,205 @@
+---
+title: "Homework 7"
+author: "Xinyi Lin"
+date: "11/9/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r,message=FALSE}
+library(tidyverse)
+library(personalized)
+library(tableone)
+library(MatchIt)
+library(Matching)
+```
+
+```{r}
+gard_data = read.table("./gardasil.dat",header = T)
+```
+
+## Question 1
+
+The treatment is practice type. As there are three kinds of practice types, we let treatment be receiving the vaccine at OB-GYN facilities and the control be receiving the vaccine at facilities other than OB-GYN to make practice types as binary. Among these variables, `Age`, `Race`, `InsuranceType`, `Location` are covariates. `Shots` contains some information about outcome, information in `AgeGroup` and `LocationType` overlap with `Age` and `Location`. There are NAs when using `MedAssist` to calculate propensity scores. So `Shots`, `MedAssist`, `AgeGroup` and `LocationType` are not regarded as covariates.
+
+```{r}
+q1_data = gard_data %>% 
+  mutate(AgeGroup = as.factor(AgeGroup),
+         Race = as.factor(Race),
+         Shots = as.factor(Shots),
+         InsuranceType = as.factor(InsuranceType),
+         MedAssist = as.factor(MedAssist),
+         Location = as.factor(Location),
+         LocationType = as.factor(LocationType)) %>% 
+  mutate(PracticeType_bin = ifelse(PracticeType==2,1,0)) %>% 
+  dplyr::select(-PracticeType)
+summary(q1_data)
+```
+
+The table reflects covariate balance for the original data is shown below
+
+```{r}
+vars <- c("Age" , "Race", "InsuranceType" ,"Location")
+## Construct a table
+cov_bal <- CreateTableOne(vars = vars, strata = "PracticeType_bin", data = q1_data, test = FALSE)
+
+## Show table with SMD
+print(cov_bal, smd = TRUE)
+```
+
+First, I calculate the propensity of original data
+
+```{r}
+ps.model<-glm(PracticeType_bin~Age + Race + InsuranceType + Location,data=q1_data, family = binomial)
+summary(ps.model)
+```
+
+Then, we can do matching. As there are 880 control group and only 533 treatment group, we have more control group than treatment group, so we can use nearest neighbor matching.
+
+```{r}
+match1 = matchit(PracticeType_bin~Age + Race + InsuranceType + Location,distance = "logit", method = "nearest", discard = "control", data=q1_data)
+summary(match1)
+plot(match1, type = "hist")
+```
+
+By comparing summary of balance for all data and matched data, we can find that mean difference of covariates among treatment and control groups become smaller. Based on the plot above, we can also find that the distribution of propensity score in treatment and control groups are more similar after matching. Both of these indicates matching make covariates balance better.
+
+## Question 2
+
+```{r}
+match1.data <- match.data(match1)
+match1.mod <- lm(Completed ~ PracticeType_bin + Age + Race + InsuranceType + Location, data = match1.data)
+summary(match1.mod)
+t = qt(0.975, 1054)
+CIL_match = 0.11-t*0.036
+CIU_match = 0.11+t*0.036
+```
+
+The point estimate of the average causal effect is 0.11. The confidence interval is (`r round(CIL_match,3)`, `r round(CIU_match,3)`).
+
+Interpretation: 
+
+As the point estimate of the average causal effect is 0.11, the estimated true average causal effect is 0.11.
+
+As the confidence interval is (`r round(CIL_match,3)`, `r round(CIU_match,3)`), it means with 95% confidence, we can conclude that the true average causal effect falls between `r round(CIL_match,3)` and `r round(CIU_match,3)`.
+
+As the p-value is smaller than 0.05, we reject null hypothesis and conclude that there is average causal effect of treatment.
+
+## Question 3
+
+The histogram of $w$ is shown below.
+
+```{r}
+q3.model = glm(PracticeType_bin~Age + Race + InsuranceType + Location, family = binomial, data = q1_data)
+#summary(q3.model)
+pprobs = predict(q3.model, type = "response")
+est.w = ifelse(q1_data$PracticeType_bin==1, 1/pprobs, 1/(1-pprobs))
+hist(est.w)
+```
+
+## Question 4
+
+```{r}
+ht.est = function(y,a,w){
+  n = length(y)
+  (1/n)*sum((y*a*w)-(y*(1-a)*w))
+}
+est_value = ht.est(q1_data$Completed, q1_data$PracticeType_bin, est.w)
+```
+
+By a using marginal structual model, we can get the estimated average causal effect equals to `r round(est_value, 3)`.
+
+## Question 5
+
+Using bootstrap to simulate distribution of estimated average causal effect and calculate confidence interval and p-value.
+
+```{r, warning=FALSE}
+boots = 1000
+b.holder = rep(NA, boots)
+for (i in 1:boots) {
+  n = nrow(q1_data)
+  S.b = sample(1:n, n, replace = TRUE)
+  boot.data = q1_data[S.b,]
+  boot.model = glm(PracticeType_bin~Age + Race + InsuranceType + Location, family = binomial, data = boot.data)
+  pprobs = predict(boot.model)
+  est.w = ifelse(boot.data$PracticeType_bin==1, 1/pprobs, 1/(1-pprobs))
+  b.holder[i] = ht.est(boot.data$Completed, boot.data$PracticeType_bin, est.w)
+}
+var = var(b.holder)
+p.val = sum(b.holder>=0)/boots
+t = quantile(b.holder, 0.975)
+CIL_marginal = est_value - t*sqrt(var)
+CIU_marginal = est_value + t*sqrt(var)
+```
+
+The point estimate of the average causal effect is `r round(est_value, 3)`. The confidence interval is (`r round(CIL_marginal,3)`, `r round(CIU_marginal,3)`).
+
+Interpretation: 
+
+As the point estimate of the average causal effect is `r round(est_value, 3)`, the estimated true average causal effect is `r round(est_value, 3)`.
+
+As the confidence interval is (`r round(CIL_marginal,3)`, `r round(CIU_marginal,3)`), it means with 95% confidence, we can conclude that the true average causal effect falls between `r round(CIL_marginal,3)` and `r round(CIU_marginal,3)`.
+
+As the confidence inerval covers 0 and p-value is larger than 0.05, we cannot reject null hypothesis and conclude that there is no average causal effect of treatment.
+
+## Question 6
+
+1. When using marginal structual model, we do not exclude any observation, we just give them different weight based on propensity scores. Therefore, some individuals with specific covariates might only be assigned to treatment group or control group. This means probabilities for them being assigned to another group is 0. This violates positivity. 
+
+2. As weights are denominators, when propensity scores are close to 1 or 0, weights can super large and blow up, extreme units can dominate.
+
+Solutions:
+
+1. We can set up some criterion and select observations based on this criterion to make sure subjects in control group have similar covariates as subjects in treatment group.
+
+2. Structural: population probability is 0 and nothing we can do; Random: sample probability is 0 and need to ”borrow” information from other values of Ci to estimate e(Ci) using logistic regression modeling; Check overlap in the sample and always pay attention to the impact of trimming on the characteristics of the analytic sample.
+
+## Question 7
+
+1. For subclassification
+
+The point estimate of the marginal average causal effect is 0.065. The confidence interval is (-0.054, 0.184).
+
+Interpretation:
+
+As the point estimate of the marginal average causal effect is 0.065, the estimated true marginal average
+causal effect is 0.065.
+
+As the confidence interval is (-0.054, 0.184), it means with 95% confidence, we can conclude that the true
+marginal average causal effect falls between -0.054 and 0.184.
+
+As the confidence inerval covers 0 and p-value is larger than 0.05, we cannot reject null hypothesis and conclude that there is no average causal effect of treatment.
+
+2. For matching:
+
+The point estimate of the average causal effect is 0.11. The confidence interval is (`r round(CIL_match,3)`, `r round(CIU_match,3)`).
+
+Interpretation: 
+
+As the point estimate of the average causal effect is 0.11, the estimated true average causal effect is 0.11.
+
+As the confidence interval is (`r round(CIL_match,3)`, `r round(CIU_match,3)`), it means with 95% confidence, we can conclude that the true average causal effect falls between `r round(CIL_match,3)` and `r round(CIU_match,3)`.
+
+As the p-value is smaller than 0.05, we reject null hypothesis and conclude that there is average causal effect of treatment.
+
+3. For marginal structual model:
+
+The point estimate of the average causal effect is `r round(est_value, 3)`. The confidence interval is (`r round(CIL_marginal,3)`, `r round(CIU_marginal,3)`).
+
+Interpretation: 
+
+As the point estimate of the average causal effect is `r round(est_value, 3)`, the estimated true average causal effect is `r round(est_value, 3)`.
+
+As the confidence interval is (`r round(CIL_marginal,3)`, `r round(CIU_marginal,3)`), it means with 95% confidence, we can conclude that the true average causal effect falls between `r round(CIL_marginal,3)` and `r round(CIU_marginal,3)`.
+
+As the confidence inerval covers 0 and p-value is larger than 0.05, we cannot reject null hypothesis and conclude that there is no average causal effect of treatment.
+
+We can find that the point estimates of average causal effect getting from subclassification and marginal structual model are similar. Both subclassification method and marginal structual model conclude that there is no average causal effect of treatment. 
+
+Subclassification and marginal structual model only give robust match of covariates, but matching find exact match observations in treatment group and control group. The average causal effect might not be vary significant and can only be detected by exact match samples. 
+
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+```

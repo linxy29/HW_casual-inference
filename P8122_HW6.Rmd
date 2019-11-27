@@ -1,0 +1,323 @@
+---
+title: "Homework 6"
+author: "Xinyi Lin"
+date: "10/19/2019"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r,message=FALSE}
+library(tidyverse)
+library(personalized)
+library(tableone)
+```
+
+```{r}
+gard_data = read.table("./gardasil.dat",header = T) %>% 
+  select(-Completed)
+gard_data$id = c(1:nrow(gard_data))
+#head(gard_data)
+```
+
+## Question 1
+
+```{r}
+q1_data = gard_data %>% 
+  mutate(AgeGroup = as.factor(AgeGroup),
+         Race = as.factor(Race),
+         Shots = as.factor(Shots),
+         InsuranceType = as.factor(InsuranceType),
+         MedAssist = as.factor(MedAssist),
+         Location = as.factor(Location),
+         LocationType = as.factor(LocationType))
+```
+
+```{r}
+summary(q1_data[q1_data$PracticeType==0,c(1:8)])
+summary(q1_data[q1_data$PracticeType==1,c(1:8)])
+summary(q1_data[q1_data$PracticeType==2,c(1:8)])
+```
+
+## Question 2
+
+The treatment is received the vaccine at OB-GYN facilities and the control is received the vaccine at facilities other than OB-GYN. Among these variables, `Age`, `Race`, `InsuranceType`, `Location` are covariates. `Shots` contains some information about outcome, information in `AgeGroup` and `LocationType` overlap with `Age` and `Location`. There are NAs when using `MedAssist` to calculate propensity scores. So `Shots`, `MedAssist`, `AgeGroup` and `LocationType` are not regarded as covariates.
+
+```{r}
+q2_data = q1_data %>% 
+  mutate(PracticeType_bin = ifelse(PracticeType==2,1,0)) %>% 
+  select(-PracticeType)
+```
+
+```{r}
+summary(q2_data[q2_data$PracticeType_bin==1,c(1:8)])
+summary(q2_data[q2_data$PracticeType_bin==0,c(1:8)])
+```
+
+Based on levels of baseline characteristics in treatment group and control group, we can get the eligibility criteria. The eligibility criteria are age between 11-26, Race equals to 0, 1, 2 or 3, InsuranceType equals to 0, 1, 2 or 3, Location equals to 1 or 4 and MedAssist equals to 0 or 1. 
+
+## Question 3
+
+According to the eligibility criteria, subjects with `LocationType` equals to 2 or 3 in treatment group 1, should be excluded. Descriptive statistics of analytic sample are shown below: 
+
+```{r}
+q3_data = q2_data %>% 
+  filter(Location %in% c(1,4))
+summary(q3_data[q3_data$PracticeType_bin==0,c(1:8)])
+summary(q3_data[q3_data$PracticeType_bin==1,c(1:8)])
+```
+
+I redefine the PracticeType variable into binary variable PracticeType_bin. I let PracticeType equals to 2 be treatment group 1 and PracticeType equals to 0 or 1 be control group. Besides, I also exclude subjects with `LocationType` equals to 2 or 3 in treatment group 1. Descriptive statistics are different.
+
+Numbers of subjects in different level of AgeGroup Race, Shots, Completed, InsuranceType, MedAssist, Location and LocationType are different. Compare to study sample, analytic sample do not have subjects with `Location` equals to 2 or 3, and mean, 1st and 3rd quantiles of age are different too. 
+
+## Question 4
+
+```{r}
+ps.model<-glm(PracticeType_bin~Age + Race + InsuranceType + Location,data=q3_data, family = binomial)
+summary(ps.model)
+```
+
+The propensity scores in the analytic sample is shown above.
+
+## Question 5
+
+```{r}
+ps <- predict(ps.model, type="response")
+
+x = q3_data
+
+prop.func <- function(x, trt){
+  # fit propensity score model
+  propens.model <- glm(trt ~ Age + Race + InsuranceType + Location, data=x, family = binomial)
+  pi.x <- predict(propens.model, type = "response")
+  pi.x
+}
+
+check.overlap(x = x,
+              trt = q3_data$PracticeType_bin,
+              type = "both",
+              propensity.func = prop.func)
+```
+
+According to the plot, we can find that propensity score of treatment group 1 and treatment group 0 do not overlap when propensity socres are near 1, so we need to trim data.
+
+```{r}
+trim_data = x[ps>=min(ps[q3_data$PracticeType_bin==1]) & ps <= max(ps[q3_data$PracticeType_bin==0]),] 
+```
+
+There are `r dim(q3_data)[1]-dim(trim_data)[1]` observations have been eliminated and there are `r dim(trim_data)[1]` observations left.
+
+```{r}
+ps.model<-glm(PracticeType_bin ~ Age + Race + InsuranceType + Location, data=trim_data, family = binomial)
+ps <- predict(ps.model, type="response")
+
+x = trim_data
+
+prop.func <- function(x, trt){
+  # fit propensity score model
+  propens.model <- glm(trt~Age + Race + InsuranceType + Location, data=x, family = binomial)
+  pi.x <- predict(propens.model, type = "response")
+  pi.x
+}
+
+check.overlap(x = x,
+              trt = trim_data$PracticeType_bin,
+              type = "both",
+              propensity.func = prop.func)
+```
+
+According to the plot above, we can find that propensity score of treatment group 1 and treatment group 0 overlap now, which means trimming can improve covariate balance, improving internal validity, so efficiency is improved. But trimming will hurts external validity(generalizability).
+
+## Question 6
+
+```{r}
+vars <- c("Age" , "Race", "InsuranceType" ,"Location")
+## Construct a table
+cov_bal <- CreateTableOne(vars = vars, strata = "PracticeType_bin", data = trim_data, test = FALSE)
+
+## Show table with SMD
+print(cov_bal, smd = TRUE)
+```
+
+We want SMD to be small. According to the table above, we can find that SMD of Race and Location is close to 0.2, which mean these two covariates balance relatively well. While SMD of age and Location are relatively large, which means these two covariates do not balance well.
+
+## Question 7
+
+```{r}
+#creating subclasses
+subclass.breaks = quantile(ps, c(.20, .40, .60, .80)) # bins (initial try - modify as needed)
+subclass.breaks
+subclass = ps
+subclass = as.numeric(ps>subclass.breaks[1])
+subclass[which(ps>subclass.breaks[1]& ps<=subclass.breaks[2])]<- 1
+subclass[which(ps>subclass.breaks[2]& ps<=subclass.breaks[3])]<- 2
+subclass[which(ps>subclass.breaks[3]& ps<=subclass.breaks[4])]<- 3
+subclass[which(ps>subclass.breaks[4])]<- 4
+#looking at sample sizes within each subclass
+table(trim_data$PracticeType_bin, subclass)
+```
+
+I choose 20%, 40%, 60% and 80% quantiles as breaks. Breaks are `r round(subclass.breaks[1], 3)`, `r round(subclass.breaks[2], 3)`, `r round(subclass.breaks[3], 3)`, `r round(subclass.breaks[4], 3)`. As these breaks do not violate positivity assumption, they are valid.
+
+Plots of propensity scores with these breaks are shown below:
+
+```{r}
+prop.func <- function(x, trt) {
+  ps[which(ps <= subclass.breaks[1])]
+}
+trim_data$ps <-ps
+check.overlap(x = trim_data[which(trim_data$ps <=subclass.breaks[1]),],
+              trt = trim_data$PracticeType_bin[which(trim_data$ps <= subclass.breaks[1])],
+              type = "both",
+              propensity.func = prop.func)
+
+
+prop.func <- function(x, trt)
+{
+ 
+  ps[which(ps>subclass.breaks[1]&ps<=subclass.breaks[2])]
+}
+trim_data$ps <-ps
+check.overlap(x = trim_data[which(ps>subclass.breaks[1]&ps<=subclass.breaks[2]),],
+              trt = trim_data$PracticeType_bin[which(ps>subclass.breaks[1]&ps<=subclass.breaks[2])],
+              type = "both",
+              propensity.func = prop.func)
+
+prop.func <- function(x, trt)
+{
+  
+  ps[which(ps>subclass.breaks[2]&ps<=subclass.breaks[3])]
+}
+trim_data$ps <-ps
+check.overlap(x = trim_data[which(ps>subclass.breaks[2]&ps<=subclass.breaks[3]),],
+              trt = trim_data$PracticeType_bin[which(ps>subclass.breaks[2]&ps<=subclass.breaks[3])],
+              type = "both",
+              propensity.func = prop.func)
+
+
+
+ prop.func <- function(x, trt)
+ {
+   
+   ps[which(ps>subclass.breaks[3])]
+ }
+ trim_data$ps <-ps
+ check.overlap(x = trim_data[which(ps>subclass.breaks[3]),],
+               trt = trim_data$PracticeType_bin[which(ps>subclass.breaks[3])],
+               type = "both",
+               propensity.func = prop.func)
+```
+
+According to above plots, we can find that propensity score of treatment group and control group overlap better, which means covariates are balanced better.
+
+```{r}
+tabUnmatched_s0 <- CreateTableOne(vars = vars, strata = "PracticeType_bin", data = trim_data[which(subclass==0),], test = FALSE)
+tabUnmatched_s1 <- CreateTableOne(vars = vars, strata = "PracticeType_bin", data = trim_data[which(subclass==1),], test = FALSE)
+tabUnmatched_s2 <- CreateTableOne(vars = vars, strata = "PracticeType_bin", data = trim_data[which(subclass==2),], test = FALSE)
+tabUnmatched_s3 <- CreateTableOne(vars = vars, strata = "PracticeType_bin", data = trim_data[which(subclass==3),], test = FALSE)
+
+## Show table with SMD
+print(tabUnmatched_s0, smd = TRUE)
+print(tabUnmatched_s1, smd = TRUE)
+print(tabUnmatched_s2, smd = TRUE)
+print(tabUnmatched_s3, smd = TRUE)
+```
+
+According to tables above, we can find that SMDs decrease a lot in each subclass. Except subclass 1, most of SMDs are smaller than or near 0.2, which means covariates are balanced well in these subclasses. SMDs in subclass 1 are relatively high, which means covariates are not balanced well.
+
+## Question 8
+
+```{r}
+Completed_data <- read.table("./gardasil.dat",header = T) %>% 
+  mutate(id = c(1:nrow(gard_data))) %>% 
+  select(Completed, id)
+q8_data = merge(Completed_data, trim_data)
+```
+
+```{r}
+ACE0 <- mean(q8_data$Completed[which(subclass==0 & q8_data$PracticeType_bin==1)])-mean(q8_data$Completed[which(subclass==0 & q8_data$PracticeType_bin==0)])
+ACE1 <- mean(q8_data$Completed[which(subclass==1 & q8_data$PracticeType_bin==1)])-mean(q8_data$Completed[which(subclass==1 & q8_data$PracticeType_bin==0)])
+ACE2 <- mean(q8_data$Completed[which(subclass==2 & q8_data$PracticeType_bin==1)])-mean(q8_data$Completed[which(subclass==2 & q8_data$PracticeType_bin==0)])
+ACE3 <- mean(q8_data$Completed[which(subclass==3 & q8_data$PracticeType_bin==1)])-mean(q8_data$Completed[which(subclass==3 & q8_data$PracticeType_bin==0)])
+ACE4 <- mean(q8_data$Completed[which(subclass==4 & q8_data$PracticeType_bin==1)])-mean(q8_data$Completed[which(subclass==4 & q8_data$PracticeType_bin==0)])
+
+ace <- (nrow(q8_data[which(subclass==0),])/nrow(q8_data))*ACE0+
+  (nrow(q8_data[which(subclass==1),])/nrow(q8_data))*ACE1+
+  (nrow(q8_data[which(subclass==2),])/nrow(q8_data))*ACE2+
+  (nrow(q8_data[which(subclass==3),])/nrow(q8_data))*ACE3+
+  (nrow(q8_data[which(subclass==4),])/nrow(q8_data))*ACE4
+
+
+v01 <- var(q8_data$Completed[which(subclass==0 & q8_data$PracticeType_bin==1)])
+v00 <- var(q8_data$Completed[which(subclass==0 & q8_data$PracticeType_bin==0)])
+v11 <- var(q8_data$Completed[which(subclass==1 & q8_data$PracticeType_bin==1)])
+v10 <- var(q8_data$Completed[which(subclass==1 & q8_data$PracticeType_bin==0)])
+v21 <- var(q8_data$Completed[which(subclass==2 & q8_data$PracticeType_bin==1)])
+v20 <- var(q8_data$Completed[which(subclass==2 & q8_data$PracticeType_bin==0)])
+v31 <- var(q8_data$Completed[which(subclass==3 & q8_data$PracticeType_bin==1)])
+v30 <- var(q8_data$Completed[which(subclass==3 & q8_data$PracticeType_bin==0)])
+v41 <- var(q8_data$Completed[which(subclass==4 & q8_data$PracticeType_bin==1)])
+v40 <- var(q8_data$Completed[which(subclass==4 & q8_data$PracticeType_bin==0)])
+
+n0 <- nrow(q8_data[which(subclass==0),])
+n1 <- nrow(q8_data[which(subclass==1),])
+n2 <- nrow(q8_data[which(subclass==2),])
+n3 <- nrow(q8_data[which(subclass==3),])
+n4 <- nrow(q8_data[which(subclass==4),])
+
+n01 <- nrow(q8_data[which(subclass==0& q8_data$PracticeType_bin==1),])
+n11 <- nrow(q8_data[which(subclass==1& q8_data$PracticeType_bin==1),])
+n21 <- nrow(q8_data[which(subclass==2& q8_data$PracticeType_bin==1),])
+n31 <- nrow(q8_data[which(subclass==3& q8_data$PracticeType_bin==1),])
+n41 <- nrow(q8_data[which(subclass==4& q8_data$PracticeType_bin==1),])
+n00 <- nrow(q8_data[which(subclass==0& q8_data$PracticeType_bin==0),])
+                                        
+n10 <- nrow(q8_data[which(subclass==1& q8_data$PracticeType_bin==0),])
+n20 <- nrow(q8_data[which(subclass==2& q8_data$PracticeType_bin==0),])
+n30 <- nrow(q8_data[which(subclass==3& q8_data$PracticeType_bin==0),])
+n40 <- nrow(q8_data[which(subclass==4& q8_data$PracticeType_bin==0),])
+                                            
+varace <-(n1)^2/nrow(q8_data)^2*((v11/n11)+(v10/n10))+(n2)^2/nrow(q8_data)^2*((v21/n21)+(v20/n20))+(n3)^2/nrow(q8_data)^2*((v31/n31)+(v30/n30))+(n4)^2/nrow(q8_data)^2*((v41/n41)+(v40/n40))+(n0)^2/nrow(q8_data)^2*((v01/n01)+(v00/n00))
+
+sdace<-sqrt(varace)
+
+CIL=ace-sdace*2
+CIU=ace+sdace*2
+```
+
+The point estimate of the marginal average causal effect is `r round(ace,3)`. The confidence interval is (`r round(CIL,3)`, `r round(CIU,3)`).
+
+Interpretation: 
+
+As the point estimate of the marginal average causal effect is `r round(ace,3)`, the estimated true marginal average causal effect is `r round(ace,3)`.
+
+As the confidence interval is (`r round(CIL,3)`, `r round(CIU,3)`), it means with 95% confidence, we can conclude that the true marginal average causal effect falls between `r round(CIL,3)` and `r round(CIU,3)`.
+
+## Question 9
+
+g-formula for observational studies:
+$$\begin{split}
+E[Y_1]-E[Y_0] & = \sum_CE(Y_1|C=c)Pr(C=c)-\sum_CE(Y_0|C=c)Pr(C=c) (IE) \\
+& = \sum_CE(Y_1|A=1,C=c)Pr(C=c)-\sum_CE(Y_0|A=1,C=c)Pr(C=c)(RA) \\
+& = \sum_{C,U}E(Y_1|A=1,C=c,U=u)Pr(C=c,U=u)-\sum_{C,U}E(Y_0|A=0,C=c,U=u)Pr(C=c,U=u)(IE+CA) \\
+& = E(Y|A=1)-E(Y|A=0)
+\end{split}$$
+
+```{r}
+#glm.model <- glm(Completed~PracticeType_bin + Age + Race + InsuranceType + Location, data=q8_data, family = binomial)
+lm.model = lm(Completed~PracticeType_bin + Age + Race + InsuranceType + Location, data=q8_data)
+#summary(glm.model)
+summary(lm.model)
+```
+
+The beta of `PracticeType_bin` is 0.1, which means given coavariates are the same, $E[Y|A=1]-E[Y|A=0]$ is 0.1. If 1)consistency, SUTVA, exchangeability and positivity assumptions are meet, 2)there is no interaction between treatment and covariates and 3)the outcome is continous, then this would be the same as the true marginal average causal effect which I estimate in question 8 as well as the average causa effect get from g-formula. 
+
+However, the estimated marginal average causal effect calculated in question 8 is not the same as what we get from linear model. Following are some possible reasons: 1) there is interaction between treatment and covariates, 2) using linear regression to fit model of binary outcome might cause bias, 3) the estimated marginal ACE is slightly different from true marginal ACE.
+
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+```

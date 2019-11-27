@@ -1,0 +1,2607 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={matching\_lab\_final.R},
+            pdfauthor={81983},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{matching\_lab\_final.R}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{81983}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{2019-11-09}
+
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{##############################}
+\CommentTok{#Matching Methods }
+\CommentTok{##############################}
+
+\CommentTok{# Install packages}
+\CommentTok{#install.packages("MatchIt")}
+\CommentTok{#install.packages("optmatch")}
+\CommentTok{#install.packages("RItools")}
+\CommentTok{#install.packages("texreg")}
+\CommentTok{#install.packages("Matching")}
+\CommentTok{#install.packages("rgenoud")}
+\CommentTok{#install.packages("Zelig")}
+
+\CommentTok{# Load packages}
+\KeywordTok{library}\NormalTok{(MatchIt)}
+\KeywordTok{library}\NormalTok{(optmatch)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: survival
+\end{verbatim}
+
+\begin{verbatim}
+## The optmatch package has an academic license. Enter relaxinfo() for more information.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(RItools)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: SparseM
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'SparseM'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:base':
+## 
+##     backsolve
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(Matching)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: MASS
+\end{verbatim}
+
+\begin{verbatim}
+## ## 
+## ##  Matching (Version 4.9-6, Build Date: 2019-04-07)
+## ##  See http://sekhon.berkeley.edu/matching for additional documentation.
+## ##  Please cite software as:
+## ##   Jasjeet S. Sekhon. 2011. ``Multivariate and Propensity Score Matching
+## ##   Software with Automated Balance Optimization: The Matching package for R.''
+## ##   Journal of Statistical Software, 42(7): 1-52. 
+## ##
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(rgenoud)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## ##  rgenoud (Version 5.8-3.0, Build Date: 2019-01-22)
+## ##  See http://sekhon.berkeley.edu/rgenoud for additional documentation.
+## ##  Please cite software as:
+## ##   Walter Mebane, Jr. and Jasjeet S. Sekhon. 2011.
+## ##   ``Genetic Optimization Using Derivatives: The rgenoud package for R.''
+## ##   Journal of Statistical Software, 42(11): 1-26. 
+## ##
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(texreg)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Version:  1.36.23
+## Date:     2017-03-03
+## Author:   Philip Leifeld (University of Glasgow)
+## 
+## Please cite the JSS article in your publications -- see citation("texreg").
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tableone)}
+\KeywordTok{library}\NormalTok{(personalized)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: glmnet
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: Matrix
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: foreach
+\end{verbatim}
+
+\begin{verbatim}
+## Loaded glmnet 2.0-18
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: mgcv
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: nlme
+\end{verbatim}
+
+\begin{verbatim}
+## This is mgcv 1.8-28. For overview type 'help("mgcv-package")'.
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: gbm
+\end{verbatim}
+
+\begin{verbatim}
+## Loaded gbm 2.1.5
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: ggplot2
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: plotly
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'plotly'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:ggplot2':
+## 
+##     last_plot
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:MASS':
+## 
+##     select
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:stats':
+## 
+##     filter
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:graphics':
+## 
+##     layout
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(Zelig)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'Zelig'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:ggplot2':
+## 
+##     stat
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Data}
+\CommentTok{# Load data: a subset of the LaLonde data is loaded with the MatchIt library}
+\KeywordTok{data}\NormalTok{(lalonde)}
+\NormalTok{?lalonde}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## starting httpd help server ...
+\end{verbatim}
+
+\begin{verbatim}
+##  done
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#To read data into R from outside source, use: read.table, read.csv, etc.}
+\CommentTok{#Or from foreign library, use: read.dta, read.sav, etc.}
+\CommentTok{#Ex: library(foreign)}
+\CommentTok{#Ex: dataname <- read.dta('path/filename.dta')}
+
+\CommentTok{# Examine data briefly}
+\KeywordTok{dim}\NormalTok{(lalonde)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 445  12
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{names}\NormalTok{(lalonde)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "age"     "educ"    "black"   "hisp"    "married" "nodegr"  "re74"   
+##  [8] "re75"    "re78"    "u74"     "u75"     "treat"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(lalonde)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    445 obs. of  12 variables:
+##  $ age    : int  37 22 30 27 33 22 23 32 22 33 ...
+##  $ educ   : int  11 9 12 11 8 9 12 11 16 12 ...
+##  $ black  : int  1 0 1 1 1 1 1 1 1 0 ...
+##  $ hisp   : int  0 1 0 0 0 0 0 0 0 0 ...
+##  $ married: int  1 0 0 0 0 0 0 0 0 1 ...
+##  $ nodegr : int  1 1 0 1 1 1 0 1 0 0 ...
+##  $ re74   : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ re75   : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ re78   : num  9930 3596 24910 7506 290 ...
+##  $ u74    : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ u75    : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ treat  : int  1 1 1 1 1 1 1 1 1 1 ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(lalonde)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   age educ black hisp married nodegr re74 re75     re78 u74 u75 treat
+## 1  37   11     1    0       1      1    0    0  9930.05   1   1     1
+## 2  22    9     0    1       0      1    0    0  3595.89   1   1     1
+## 3  30   12     1    0       0      0    0    0 24909.50   1   1     1
+## 4  27   11     1    0       0      1    0    0  7506.15   1   1     1
+## 5  33    8     1    0       0      1    0    0   289.79   1   1     1
+## 6  22    9     1    0       0      1    0    0  4056.49   1   1     1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(lalonde)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       age             educ          black             hisp        
+##  Min.   :17.00   Min.   : 3.0   Min.   :0.0000   Min.   :0.00000  
+##  1st Qu.:20.00   1st Qu.: 9.0   1st Qu.:1.0000   1st Qu.:0.00000  
+##  Median :24.00   Median :10.0   Median :1.0000   Median :0.00000  
+##  Mean   :25.37   Mean   :10.2   Mean   :0.8337   Mean   :0.08764  
+##  3rd Qu.:28.00   3rd Qu.:11.0   3rd Qu.:1.0000   3rd Qu.:0.00000  
+##  Max.   :55.00   Max.   :16.0   Max.   :1.0000   Max.   :1.00000  
+##     married           nodegr           re74              re75      
+##  Min.   :0.0000   Min.   :0.000   Min.   :    0.0   Min.   :    0  
+##  1st Qu.:0.0000   1st Qu.:1.000   1st Qu.:    0.0   1st Qu.:    0  
+##  Median :0.0000   Median :1.000   Median :    0.0   Median :    0  
+##  Mean   :0.1685   Mean   :0.782   Mean   : 2102.3   Mean   : 1377  
+##  3rd Qu.:0.0000   3rd Qu.:1.000   3rd Qu.:  824.4   3rd Qu.: 1221  
+##  Max.   :1.0000   Max.   :1.000   Max.   :39570.7   Max.   :25142  
+##       re78            u74              u75             treat       
+##  Min.   :    0   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+##  1st Qu.:    0   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+##  Median : 3702   Median :1.0000   Median :1.0000   Median :0.0000  
+##  Mean   : 5301   Mean   :0.7326   Mean   :0.6494   Mean   :0.4157  
+##  3rd Qu.: 8125   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000  
+##  Max.   :60308   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{table}\NormalTok{(lalonde}\OperatorTok{$}\NormalTok{treat)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##   0   1 
+## 260 185
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Check Covariate Balance}
+\NormalTok{vars <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"age"}\NormalTok{  ,   }\StringTok{"educ"}\NormalTok{ ,   }\StringTok{"black"}\NormalTok{  , }\StringTok{"hisp"}\NormalTok{   , }\StringTok{"married"}\NormalTok{ ,}\StringTok{"nodegr"}\NormalTok{  ,}\StringTok{"re74"}\NormalTok{  ,  }\StringTok{"re75"}\NormalTok{ )}
+\CommentTok{## Construct a table}
+\NormalTok{covbal0 <-}\StringTok{ }\KeywordTok{CreateTableOne}\NormalTok{(}\DataTypeTok{vars =}\NormalTok{ vars, }\DataTypeTok{strata =} \StringTok{"treat"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ lalonde, }\DataTypeTok{test =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{smd=}\OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(covbal0, }\DataTypeTok{smd =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                      Stratified by treat
+##                       0                 1                 SMD   
+##   n                       260               185                 
+##   age (mean (SD))       25.05 (7.06)      25.82 (7.16)     0.107
+##   educ (mean (SD))      10.09 (1.61)      10.35 (2.01)     0.141
+##   black (mean (SD))      0.83 (0.38)       0.84 (0.36)     0.044
+##   hisp (mean (SD))       0.11 (0.31)       0.06 (0.24)     0.175
+##   married (mean (SD))    0.15 (0.36)       0.19 (0.39)     0.094
+##   nodegr (mean (SD))     0.83 (0.37)       0.71 (0.46)     0.304
+##   re74 (mean (SD))    2107.03 (5687.91) 2095.57 (4886.62)  0.002
+##   re75 (mean (SD))    1266.91 (3102.98) 1532.06 (3219.25)  0.084
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#OTHER FUNCTIONS FOR COVARIATE BALANCE CHECKING}
+\CommentTok{# Check initial balance (from RItools package): }
+\CommentTok{# How similar are treatment/control groups on X?}
+\CommentTok{#?xBalance}
+\CommentTok{#xBalance(treat ~ . - (re78 + treat), data =lalonde, report=c("adj.means","std.diffs")) }
+\CommentTok{#xBalance(treat ~ . - (re78 + treat), data =lalonde, report=c("all")) }
+\CommentTok{#?balanceUV}
+\CommentTok{#RE75.BAL  <- balanceUV(lalonde$re75[lalonde$treat==1],lalonde$re75[lalonde$treat!=1])}
+\CommentTok{#summary(RE75.BAL)}
+
+
+
+\CommentTok{## Example USING MATCHIT PACKAGE }
+
+\CommentTok{# 1. Implement nearest neighbor matching on the propensity score (NN match on PS score: 1:1, greedy, without replacement or calipers)}
+\NormalTok{psmatch1 <-}\StringTok{ }\KeywordTok{matchit}\NormalTok{(treat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75, }
+                    \DataTypeTok{distance=}\StringTok{"logit"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"nearest"}\NormalTok{, }\DataTypeTok{discard =} \StringTok{"control"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ lalonde)}
+
+\CommentTok{# 2. Check balance}
+\KeywordTok{summary}\NormalTok{(psmatch1, }\DataTypeTok{standardize=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## matchit(formula = treat ~ age + educ + black + hisp + nodegr + 
+##     married + re74 + re75, data = lalonde, method = "nearest", 
+##     distance = "logit", discard = "control")
+## 
+## Summary of balance for all data:
+##          Means Treated Means Control SD Control Std. Mean Diff. eCDF Med
+## distance        0.4377        0.4001     0.0933          0.3935   0.1143
+## age            25.8162       25.0538     7.0577          0.1066   0.0222
+## educ           10.3459       10.0885     1.6143          0.1281   0.0127
+## black           0.8432        0.8269     0.3790          0.0448   0.0082
+## hisp            0.0595        0.1077     0.3106         -0.2034   0.0241
+## nodegr          0.7081        0.8346     0.3722         -0.2775   0.0633
+## married         0.1892        0.1538     0.3615          0.0900   0.0177
+## re74         2095.5740     2107.0268  5687.9067         -0.0023   0.0158
+## re75         1532.0556     1266.9092  3102.9830          0.0824   0.0620
+##          eCDF Mean eCDF Max
+## distance    0.1117   0.2140
+## age         0.0254   0.0652
+## educ        0.0287   0.1265
+## black       0.0082   0.0163
+## hisp        0.0241   0.0482
+## nodegr      0.0633   0.1265
+## married     0.0177   0.0353
+## re74        0.0192   0.0471
+## re75        0.0508   0.1075
+## 
+## 
+## Summary of balance for matched data:
+##          Means Treated Means Control SD Control Std. Mean Diff. eCDF Med
+## distance        0.4377        0.4267     0.0910          0.1148   0.0216
+## age            25.8162       25.8865     7.3094         -0.0098   0.0108
+## educ           10.3459       10.1405     1.7168          0.1022   0.0108
+## black           0.8432        0.8486     0.3594         -0.0148   0.0027
+## hisp            0.0595        0.0649     0.2470         -0.0228   0.0027
+## nodegr          0.7081        0.7730     0.4200         -0.1423   0.0324
+## married         0.1892        0.2000     0.4011         -0.0275   0.0054
+## re74         2095.5740     1653.0266  4509.2061          0.0906   0.0270
+## re75         1532.0556     1352.9973  3345.1146          0.0556   0.0595
+##          eCDF Mean eCDF Max
+## distance    0.0353   0.1027
+## age         0.0118   0.0432
+## educ        0.0224   0.0757
+## black       0.0027   0.0054
+## hisp        0.0027   0.0054
+## nodegr      0.0324   0.0649
+## married     0.0054   0.0108
+## re74        0.0360   0.0865
+## re75        0.0509   0.1135
+## 
+## Percent Balance Improvement:
+##          Std. Mean Diff. eCDF Med eCDF Mean eCDF Max
+## distance         70.8237  81.0909   68.3957  52.0155
+## age              90.7827  51.2881   53.5022  33.6523
+## educ             20.2261  14.7541   21.9664  40.1808
+## black            66.8790  66.8790   66.8790  66.8790
+## hisp             88.7931  88.7931   88.7931  88.7931
+## nodegr           48.7264  48.7264   48.7264  48.7264
+## married          69.4118  69.4118   69.4118  69.4118
+## re74          -3764.0926 -71.0526  -87.4591 -83.6645
+## re75             32.4681   4.0268   -0.1187  -5.6093
+## 
+## Sample sizes:
+##           Control Treated
+## All           260     185
+## Matched       185     185
+## Unmatched      64       0
+## Discarded      11       0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#compare with initial sample}
+\KeywordTok{print}\NormalTok{(covbal0, }\DataTypeTok{smd =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                      Stratified by treat
+##                       0                 1                 SMD   
+##   n                       260               185                 
+##   age (mean (SD))       25.05 (7.06)      25.82 (7.16)     0.107
+##   educ (mean (SD))      10.09 (1.61)      10.35 (2.01)     0.141
+##   black (mean (SD))      0.83 (0.38)       0.84 (0.36)     0.044
+##   hisp (mean (SD))       0.11 (0.31)       0.06 (0.24)     0.175
+##   married (mean (SD))    0.15 (0.36)       0.19 (0.39)     0.094
+##   nodegr (mean (SD))     0.83 (0.37)       0.71 (0.46)     0.304
+##   re74 (mean (SD))    2107.03 (5687.91) 2095.57 (4886.62)  0.002
+##   re75 (mean (SD))    1266.91 (3102.98) 1532.06 (3219.25)  0.084
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-1.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-2.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch1, }\DataTypeTok{type=}\StringTok{"hist"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\KeywordTok{plot}\NormalTok{(psmatch1, }\DataTypeTok{type=}\StringTok{"jitter"}\NormalTok{, }\DataTypeTok{interactive=}\OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## More on nearest neighbor matching and the propensity score}
+
+\CommentTok{# Estimating a propensity score, implementing a matching procedure, checking balance}
+
+\CommentTok{# Optimal (instead of greedy) matching on PS score: 1:1, without replacement or calipers}
+\CommentTok{# Now Add polynomials and interactions to propensity score model}
+\NormalTok{psmatch2 <-}\StringTok{ }\KeywordTok{matchit}\NormalTok{(treat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\NormalTok{re75}
+                    \OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr}\OperatorTok{:}\NormalTok{re74,  }\DataTypeTok{distance =} \StringTok{"logit"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"optimal"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ lalonde)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in optmatch::fullmatch(d, min.controls = ratio, max.controls = ratio, : Without 'data' argument the order of the match is not guaranteed
+##     to be the same as your original data.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#authors of the R package say to ignore this warning..}
+
+\CommentTok{# Check balance}
+\KeywordTok{summary}\NormalTok{(psmatch2, }\DataTypeTok{standardize=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## matchit(formula = treat ~ age + educ + black + hisp + nodegr + 
+##     married + re74 + re75 + I(age^2) + nodegr:re74, data = lalonde, 
+##     method = "optimal", distance = "logit")
+## 
+## Summary of balance for all data:
+##             Means Treated Means Control SD Control Std. Mean Diff.
+## distance           0.4425        0.3967     0.0990          0.4241
+## age               25.8162       25.0538     7.0577          0.1066
+## educ              10.3459       10.0885     1.6143          0.1281
+## black              0.8432        0.8269     0.3790          0.0448
+## hisp               0.0595        0.1077     0.3106         -0.2034
+## nodegr             0.7081        0.8346     0.3722         -0.2775
+## married            0.1892        0.1538     0.3615          0.0900
+## re74            2095.5740     2107.0268  5687.9067         -0.0023
+## re75            1532.0556     1266.9092  3102.9830          0.0824
+## I(age^2)         717.3946      677.3154   428.7844          0.0929
+## nodegr:re74     1094.1482     1778.4835  5375.0171         -0.2019
+##             eCDF Med eCDF Mean eCDF Max
+## distance      0.1173    0.1232   0.2467
+## age           0.0222    0.0254   0.0652
+## educ          0.0127    0.0287   0.1265
+## black         0.0082    0.0082   0.0163
+## hisp          0.0241    0.0241   0.0482
+## nodegr        0.0633    0.0633   0.1265
+## married       0.0177    0.0177   0.0353
+## re74          0.0158    0.0192   0.0471
+## re75          0.0620    0.0508   0.1075
+## I(age^2)      0.0222    0.0254   0.0652
+## nodegr:re74   0.0290    0.0276   0.0534
+## 
+## 
+## Summary of balance for matched data:
+##             Means Treated Means Control SD Control Std. Mean Diff.
+## distance           0.4425        0.4260     0.0940          0.1526
+## age               25.8162       25.8595     7.3980         -0.0060
+## educ              10.3459       10.1081     1.7160          0.1183
+## black              0.8432        0.8541     0.3540         -0.0297
+## hisp               0.0595        0.0595     0.2371          0.0000
+## nodegr             0.7081        0.7676     0.4235         -0.1304
+## married            0.1892        0.1946     0.3970         -0.0138
+## re74            2095.5740     1922.3512  5034.2494          0.0354
+## re75            1532.0556     1456.7589  3412.2044          0.0234
+## I(age^2)         717.3946      723.1459   459.7272         -0.0133
+## nodegr:re74     1094.1482     1460.6146  4498.6622         -0.1081
+##             eCDF Med eCDF Mean eCDF Max
+## distance      0.0324    0.0443   0.1297
+## age           0.0108    0.0138   0.0541
+## educ          0.0108    0.0239   0.1189
+## black         0.0054    0.0054   0.0108
+## hisp          0.0000    0.0000   0.0000
+## nodegr        0.0297    0.0297   0.0595
+## married       0.0027    0.0027   0.0054
+## re74          0.0162    0.0235   0.0649
+## re75          0.0459    0.0376   0.0811
+## I(age^2)      0.0108    0.0138   0.0541
+## nodegr:re74   0.0108    0.0133   0.0378
+## 
+## Percent Balance Improvement:
+##             Std. Mean Diff. eCDF Med eCDF Mean eCDF Max
+## distance            64.0080  72.3404   64.0638  47.4083
+## age                 94.3278  51.2881   45.4677  17.0654
+## educ                 7.6302  14.7541   16.5847   5.9984
+## black               33.7580  33.7580   33.7580  33.7580
+## hisp               100.0000 100.0000  100.0000 100.0000
+## nodegr              52.9992  52.9992   52.9992  52.9992
+## married             84.7059  84.7059   84.7059  84.7059
+## re74             -1412.4914  -2.6316  -22.1508 -37.7483
+## re75                71.6018  25.8389   26.0345  24.5648
+## I(age^2)            85.6500  51.2881   45.4677  17.0654
+## nodegr:re74         46.4493  62.6571   51.9828  29.1829
+## 
+## Sample sizes:
+##           Control Treated
+## All           260     185
+## Matched       185     185
+## Unmatched      75       0
+## Discarded       0       0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch2)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-6.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-7.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-8.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-9.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch2, }\DataTypeTok{type=}\StringTok{"jitter"}\NormalTok{, }\DataTypeTok{interactive =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-10.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch2, }\DataTypeTok{type=}\StringTok{"hist"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-1-11.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 3. Create matched data for analysis}
+\NormalTok{psmatch1.data <-}\StringTok{ }\KeywordTok{match.data}\NormalTok{(psmatch1)}
+\NormalTok{psmatch2.data <-}\StringTok{ }\KeywordTok{match.data}\NormalTok{(psmatch2)}
+
+
+\CommentTok{# 4. Analyize: Difference of means}
+\CommentTok{# Outcome Regression Analysis: AVERAGE TREATMENT EFFECT ON THE TREATED}
+\NormalTok{psmatch1.mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75, }
+                   \DataTypeTok{data =}\NormalTok{ psmatch1.data)}
+\KeywordTok{summary}\NormalTok{(psmatch1.mod)  }\CommentTok{#beta of treat：ATT, among the treated}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = re78 ~ treat + age + educ + black + hisp + nodegr + 
+##     married + re74 + re75, data = psmatch1.data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -10323  -4430  -1591   3022  54126 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)   
+## (Intercept) -5.213e+01  3.598e+03  -0.014  0.98845   
+## treat        1.870e+03  6.722e+02   2.783  0.00568 **
+## age          7.966e+01  4.826e+01   1.651  0.09967 . 
+## educ         4.153e+02  2.453e+02   1.693  0.09131 . 
+## black       -2.335e+03  1.179e+03  -1.981  0.04830 * 
+## hisp        -9.836e+01  1.766e+03  -0.056  0.95563   
+## nodegr      -1.390e+02  1.063e+03  -0.131  0.89608   
+## married      1.042e+02  9.079e+02   0.115  0.90869   
+## re74         8.787e-02  1.028e-01   0.855  0.39305   
+## re75         3.110e-02  1.500e-01   0.207  0.83584   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6440 on 360 degrees of freedom
+## Multiple R-squared:  0.06868,    Adjusted R-squared:  0.0454 
+## F-statistic:  2.95 on 9 and 360 DF,  p-value: 0.002151
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{?zelig}
+\NormalTok{psmatch1.mod.zelig <-}\StringTok{ }\KeywordTok{zelig}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75,  }\DataTypeTok{data =}\NormalTok{ psmatch1.data,  }\DataTypeTok{model =} \StringTok{"ls"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## How to cite this model in Zelig:
+##   R Core Team. 2007.
+##   ls: Least Squares Regression for Continuous Dependent Variables
+##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
+##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(psmatch1.mod.zelig)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Model: 
+## 
+## Call:
+## z5$zelig(formula = re78 ~ treat + age + educ + black + hisp + 
+##     nodegr + married + re74 + re75, data = psmatch1.data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -10323  -4430  -1591   3022  54126 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)
+## (Intercept) -5.213e+01  3.598e+03  -0.014  0.98845
+## treat        1.870e+03  6.722e+02   2.783  0.00568
+## age          7.966e+01  4.826e+01   1.651  0.09967
+## educ         4.153e+02  2.453e+02   1.693  0.09131
+## black       -2.335e+03  1.179e+03  -1.981  0.04830
+## hisp        -9.836e+01  1.766e+03  -0.056  0.95563
+## nodegr      -1.390e+02  1.063e+03  -0.131  0.89608
+## married      1.042e+02  9.079e+02   0.115  0.90869
+## re74         8.787e-02  1.028e-01   0.855  0.39305
+## re75         3.110e-02  1.500e-01   0.207  0.83584
+## 
+## Residual standard error: 6440 on 360 degrees of freedom
+## Multiple R-squared:  0.06868,    Adjusted R-squared:  0.0454 
+## F-statistic:  2.95 on 9 and 360 DF,  p-value: 0.002151
+## 
+## Statistical Warning: The GIM test suggests this model is misspecified
+##  (based on comparisons between classical and robust SE's; see http://j.mp/GIMtest).
+##  We suggest you run diagnostics to ascertain the cause, respecify the model
+##  and run it again.
+## 
+## Next step: Use 'setx' method
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{psmatch1.mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }
+\StringTok{                     }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr}\OperatorTok{:}\NormalTok{re74, }
+                   \DataTypeTok{data =}\NormalTok{ psmatch1.data)}
+\KeywordTok{summary}\NormalTok{(psmatch1.mod) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = re78 ~ treat + age + educ + black + hisp + nodegr + 
+##     married + re74 + re75 + I(age^2) + I(educ^2) + re74 + nodegr:re74, 
+##     data = psmatch1.data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -11631  -4132  -1710   3023  53605 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)  5980.7965  6823.0992   0.877   0.3813  
+## treat        1671.4554   673.0227   2.484   0.0135 *
+## age           162.4974   295.5446   0.550   0.5828  
+## educ        -1575.3536  1293.1899  -1.218   0.2240  
+## black       -2491.3094  1172.2990  -2.125   0.0343 *
+## hisp         -238.7050  1758.8143  -0.136   0.8921  
+## nodegr       1740.5824  1323.0590   1.316   0.1892  
+## married      -124.3491   916.4262  -0.136   0.8921  
+## re74            0.2329     0.1208   1.927   0.0547 .
+## re75            0.1724     0.1591   1.083   0.2793  
+## I(age^2)       -1.6450     4.8254  -0.341   0.7334  
+## I(educ^2)     112.7987    72.0157   1.566   0.1182  
+## nodegr:re74    -0.3592     0.1546  -2.323   0.0207 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6397 on 357 degrees of freedom
+## Multiple R-squared:  0.08856,    Adjusted R-squared:  0.05793 
+## F-statistic: 2.891 on 12 and 357 DF,  p-value: 0.0007897
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{psmatch2.mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }
+\StringTok{                     }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr}\OperatorTok{:}\NormalTok{re74, }
+                   \DataTypeTok{data =}\NormalTok{ psmatch2.data) }\CommentTok{# optimal matching}
+\KeywordTok{summary}\NormalTok{(psmatch2.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = re78 ~ treat + age + educ + black + hisp + nodegr + 
+##     married + re74 + re75 + I(age^2) + I(educ^2) + re74 + nodegr:re74, 
+##     data = psmatch2.data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -11632  -4248  -1538   2975  53383 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)  4422.5941  7164.7184   0.617   0.5374  
+## treat        1395.9141   706.6411   1.975   0.0490 *
+## age           243.4706   301.8886   0.806   0.4205  
+## educ        -1597.6938  1340.7119  -1.192   0.2342  
+## black       -2382.7918  1226.6819  -1.942   0.0529 .
+## hisp          107.3512  1859.8312   0.058   0.9540  
+## nodegr       2293.1741  1400.2362   1.638   0.1024  
+## married      -199.4948   964.5742  -0.207   0.8363  
+## re74            0.2566     0.1259   2.038   0.0423 *
+## re75            0.1093     0.1635   0.668   0.5044  
+## I(age^2)       -3.3032     4.9116  -0.673   0.5017  
+## I(educ^2)     119.0317    75.0092   1.587   0.1134  
+## nodegr:re74    -0.3321     0.1539  -2.158   0.0316 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6700 on 357 degrees of freedom
+## Multiple R-squared:  0.07609,    Adjusted R-squared:  0.04504 
+## F-statistic:  2.45 on 12 and 357 DF,  p-value: 0.004445
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{### AVERAGE TREATMENT EFFECT }
+\NormalTok{z.out1 <-}\StringTok{ }\KeywordTok{zelig}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }
+\StringTok{                 }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr}\OperatorTok{:}\NormalTok{re74, }\DataTypeTok{data =} \KeywordTok{match.data}\NormalTok{(psmatch1), }\DataTypeTok{model =} \StringTok{"ls"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## How to cite this model in Zelig:
+##   R Core Team. 2007.
+##   ls: Least Squares Regression for Continuous Dependent Variables
+##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
+##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x.out1 <-}\StringTok{ }\KeywordTok{setx}\NormalTok{(z.out1, }\DataTypeTok{treat=}\DecValTok{0}\NormalTok{)}
+\NormalTok{x1.out1 <-}\StringTok{ }\KeywordTok{setx}\NormalTok{(z.out1, }\DataTypeTok{treat=}\DecValTok{1}\NormalTok{)}
+\NormalTok{s.out1 <-}\StringTok{ }\NormalTok{Zelig}\OperatorTok{:::}\KeywordTok{sim}\NormalTok{(z.out1, }\DataTypeTok{x =}\NormalTok{ x.out1, }\DataTypeTok{x1 =}\NormalTok{ x1.out1)}
+\KeywordTok{summary}\NormalTok{(s.out1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  sim x :
+##  -----
+## ev
+##       mean       sd      50%     2.5%    97.5%
+## 1 4121.832 569.0033 4117.808 2980.367 5249.669
+## pv
+##          mean       sd      50%      2.5%   97.5%
+## [1,] 3855.915 6339.905 3516.642 -7524.774 16566.4
+## 
+##  sim x1 :
+##  -----
+## ev
+##       mean       sd      50%    2.5%    97.5%
+## 1 5801.116 584.6237 5803.802 4681.97 6964.146
+## pv
+##          mean      sd      50%      2.5%    97.5%
+## [1,] 5731.488 6369.79 5814.596 -6157.855 17973.45
+## fd
+##       mean       sd      50%    2.5%    97.5%
+## 1 1679.284 666.5923 1678.344 353.511 3002.799
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{z.out2 <-}\StringTok{ }\KeywordTok{zelig}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }
+\StringTok{                  }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr}\OperatorTok{:}\NormalTok{re74, }\DataTypeTok{data =} \KeywordTok{match.data}\NormalTok{(psmatch2), }\DataTypeTok{model =} \StringTok{"ls"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## How to cite this model in Zelig:
+##   R Core Team. 2007.
+##   ls: Least Squares Regression for Continuous Dependent Variables
+##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
+##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x.out2 <-}\StringTok{ }\KeywordTok{setx}\NormalTok{(z.out2, }\DataTypeTok{treat=}\DecValTok{0}\NormalTok{)}
+\NormalTok{x1.out2 <-}\StringTok{ }\KeywordTok{setx}\NormalTok{(z.out2, }\DataTypeTok{treat=}\DecValTok{1}\NormalTok{)}
+\NormalTok{s.out2 <-}\StringTok{ }\NormalTok{Zelig}\OperatorTok{:::}\KeywordTok{sim}\NormalTok{(z.out2, }\DataTypeTok{x =}\NormalTok{ x.out2, }\DataTypeTok{x1 =}\NormalTok{ x1.out2)}
+\KeywordTok{summary}\NormalTok{(s.out2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  sim x :
+##  -----
+## ev
+##      mean       sd     50%     2.5%   97.5%
+## 1 4418.53 589.2455 4432.06 3295.419 5587.26
+## pv
+##          mean       sd      50%      2.5%    97.5%
+## [1,] 3952.392 6651.499 3682.558 -8543.974 17088.76
+## 
+##  sim x1 :
+##  -----
+## ev
+##       mean       sd      50%   2.5%    97.5%
+## 1 5791.362 623.9704 5803.511 4605.2 6986.455
+## pv
+##          mean       sd      50%      2.5%    97.5%
+## [1,] 5716.928 6746.529 5750.966 -7733.017 18515.03
+## fd
+##       mean       sd      50%     2.5%    97.5%
+## 1 1372.832 698.1164 1358.294 29.60053 2700.438
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#COMPARE WITH ASSOCIATION}
+\CommentTok{# Treatment effect without matching: difference of means}
+\NormalTok{association <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat, }\DataTypeTok{data=}\NormalTok{lalonde)}
+\KeywordTok{summary}\NormalTok{(association)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = re78 ~ treat, data = lalonde)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+##  -6349  -4555  -1829   2917  53959 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   4554.8      408.0  11.162  < 2e-16 ***
+## treat         1794.3      632.9   2.835  0.00479 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6580 on 443 degrees of freedom
+## Multiple R-squared:  0.01782,    Adjusted R-squared:  0.01561 
+## F-statistic: 8.039 on 1 and 443 DF,  p-value: 0.004788
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#COMPARE WITH DIRECT REGRESSION ADJUSTMENT}
+\CommentTok{# Treatment effect without matching: regression}
+\NormalTok{unmatched <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\NormalTok{nodegr}\OperatorTok{*}\NormalTok{re74}\OperatorTok{+}\StringTok{ }\NormalTok{re75, }
+                \DataTypeTok{data =}\NormalTok{ lalonde)}
+\KeywordTok{summary}\NormalTok{(unmatched)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = re78 ~ treat + age + I(age^2) + educ + I(educ^2) + 
+##     black + hisp + nodegr + married + nodegr * re74 + re75, data = lalonde)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -11327  -4306  -1631   2875  53758 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)  5137.9066  6539.6043   0.786   0.4325  
+## treat        1486.1422   641.6566   2.316   0.0210 *
+## age           169.1049   273.5058   0.618   0.5367  
+## I(age^2)       -2.1082     4.4909  -0.469   0.6390  
+## educ        -1232.1829  1235.0520  -0.998   0.3190  
+## I(educ^2)      91.7247    69.1569   1.326   0.1854  
+## black       -2349.1062  1167.9616  -2.011   0.0449 *
+## hisp          -81.6848  1550.3483  -0.053   0.9580  
+## nodegr       1520.1419  1263.5903   1.203   0.2296  
+## married      -355.0499   891.7335  -0.398   0.6907  
+## re74            0.2623     0.1196   2.193   0.0288 *
+## re75            0.1000     0.1367   0.732   0.4649  
+## nodegr:re74    -0.2681     0.1330  -2.017   0.0444 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6492 on 432 degrees of freedom
+## Multiple R-squared:  0.0676, Adjusted R-squared:  0.0417 
+## F-statistic:  2.61 on 12 and 432 DF,  p-value: 0.002279
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Final comparison}
+\NormalTok{association}\OperatorTok{$}\NormalTok{coeff[}\StringTok{"treat"}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    treat 
+## 1794.343
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{unmatched}\OperatorTok{$}\NormalTok{coeff[}\StringTok{"treat"}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    treat 
+## 1486.142
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(s.out1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  sim x :
+##  -----
+## ev
+##       mean       sd      50%     2.5%    97.5%
+## 1 4121.832 569.0033 4117.808 2980.367 5249.669
+## pv
+##          mean       sd      50%      2.5%   97.5%
+## [1,] 3855.915 6339.905 3516.642 -7524.774 16566.4
+## 
+##  sim x1 :
+##  -----
+## ev
+##       mean       sd      50%    2.5%    97.5%
+## 1 5801.116 584.6237 5803.802 4681.97 6964.146
+## pv
+##          mean      sd      50%      2.5%    97.5%
+## [1,] 5731.488 6369.79 5814.596 -6157.855 17973.45
+## fd
+##       mean       sd      50%    2.5%    97.5%
+## 1 1679.284 666.5923 1678.344 353.511 3002.799
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(s.out2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  sim x :
+##  -----
+## ev
+##      mean       sd     50%     2.5%   97.5%
+## 1 4418.53 589.2455 4432.06 3295.419 5587.26
+## pv
+##          mean       sd      50%      2.5%    97.5%
+## [1,] 3952.392 6651.499 3682.558 -8543.974 17088.76
+## 
+##  sim x1 :
+##  -----
+## ev
+##       mean       sd      50%   2.5%    97.5%
+## 1 5791.362 623.9704 5803.511 4605.2 6986.455
+## pv
+##          mean       sd      50%      2.5%    97.5%
+## [1,] 5716.928 6746.529 5750.966 -7733.017 18515.03
+## fd
+##       mean       sd      50%     2.5%    97.5%
+## 1 1372.832 698.1164 1358.294 29.60053 2700.438
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{####}\RegionMarkerTok{END}\CommentTok{ OF LAB####}
+
+
+
+
+
+
+
+
+
+\CommentTok{####OPTIMAL MATCHING WITH GENMATCH}
+
+
+\CommentTok{#This function finds optimal balance using multivariate matching where a search }
+\CommentTok{#algorithm determines the weight each covariate is given. Balance is determined by }
+\CommentTok{#examining cumulative probability distribution functions of a variety of standardized }
+\CommentTok{#statistics. By default, these statistics include t-tests and Kolmogorov-Smirnov tests.}
+\CommentTok{#A variety of descriptive statistics based on empirical- QQ (eQQ) plots can also be used }
+\CommentTok{#or any user provided measure of balance. The statistics are not used to conduct formal}
+\CommentTok{#hypothesis tests, because no measure of balance is a monotonic function of bias and }
+\CommentTok{#because balance should be maximized without limit. }
+\CommentTok{#The object returned by GenMatch can be supplied to the Match function }
+\CommentTok{#(via the Weight.matrix option) to obtain causal estimates.}
+
+\NormalTok{?GenMatch}
+\KeywordTok{attach}\NormalTok{(lalonde)}
+\CommentTok{#The covariates we want to match on}
+\NormalTok{X =}\StringTok{ }\KeywordTok{cbind}\NormalTok{(age, educ, black, hisp, married, nodegr, re75, re74)}
+\CommentTok{#The covariates we want to obtain balance on }
+\NormalTok{BalanceMat <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(age,}\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{), educ,}\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{), black, hisp, married, nodegr, re75, re74, }\KeywordTok{I}\NormalTok{(nodegr}\OperatorTok{*}\NormalTok{re74))}
+\CommentTok{#}
+\CommentTok{#Let's call GenMatch() to find the optimal weight to give each}
+\CommentTok{#covariate in 'X' so as we have achieved balance on the covariates in}
+\end{Highlighting}
+\end{Shaded}
+
+BalanceMat'. This is only an example so we want GenMatch to be quick
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#so the population size has been set to be only 16 via the 'pop.size'}
+\CommentTok{#option. This is *WAY* too small for actual problems.}
+\CommentTok{#For details see http://sekhon.berkeley.edu/papers/MatchingJSS.pdf.}
+\CommentTok{#}
+\NormalTok{out <-}\StringTok{ }\KeywordTok{GenMatch}\NormalTok{(}\DataTypeTok{Tr=}\NormalTok{treat, }\DataTypeTok{X=}\NormalTok{X, }\DataTypeTok{BalanceMatrix=}\NormalTok{BalanceMat, }\DataTypeTok{estimand=}\StringTok{"ATE"}\NormalTok{, }\DataTypeTok{M=}\DecValTok{1}\NormalTok{,}
+                   \DataTypeTok{pop.size=}\DecValTok{200}\NormalTok{, }\DataTypeTok{max.generations=}\DecValTok{10}\NormalTok{, }\DataTypeTok{wait.generations=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## 
+## Sat Nov 09 21:01:01 2019
+## Domains:
+##  0.000000e+00   <=  X1   <=    1.000000e+03 
+##  0.000000e+00   <=  X2   <=    1.000000e+03 
+##  0.000000e+00   <=  X3   <=    1.000000e+03 
+##  0.000000e+00   <=  X4   <=    1.000000e+03 
+##  0.000000e+00   <=  X5   <=    1.000000e+03 
+##  0.000000e+00   <=  X6   <=    1.000000e+03 
+##  0.000000e+00   <=  X7   <=    1.000000e+03 
+##  0.000000e+00   <=  X8   <=    1.000000e+03 
+## 
+## Data Type: Floating Point
+## Operators (code number, name, population) 
+##  (1) Cloning...........................  22
+##  (2) Uniform Mutation..................  25
+##  (3) Boundary Mutation.................  25
+##  (4) Non-Uniform Mutation..............  25
+##  (5) Polytope Crossover................  25
+##  (6) Simple Crossover..................  26
+##  (7) Whole Non-Uniform Mutation........  25
+##  (8) Heuristic Crossover...............  26
+##  (9) Local-Minimum Crossover...........  0
+## 
+## SOFT Maximum Number of Generations: 10
+## Maximum Nonchanging Generations: 1
+## Population size       : 200
+## Convergence Tolerance: 1.000000e-03
+## 
+## Not Using the BFGS Derivative Based Optimizer on the Best Individual Each Generation.
+## Not Checking Gradients before Stopping.
+## Using Out of Bounds Individuals.
+## 
+## Maximization Problem.
+## GENERATION: 0 (initializing the population)
+## Lexical Fit..... 1.570667e-01  1.570667e-01  2.057512e-01  2.057512e-01  2.509245e-01  4.153243e-01  5.169132e-01  6.726290e-01  7.914738e-01  8.077672e-01  9.308573e-01  9.364249e-01  9.850044e-01  9.930981e-01  9.930981e-01  9.930981e-01  9.999977e-01  9.999977e-01  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  
+## #unique......... 200, #Total UniqueCount: 200
+## var 1:
+## best............ 8.016818e+02
+## mean............ 5.023330e+02
+## variance........ 8.733647e+04
+## var 2:
+## best............ 5.176609e+02
+## mean............ 4.903046e+02
+## variance........ 7.518029e+04
+## var 3:
+## best............ 3.659864e+02
+## mean............ 5.113695e+02
+## variance........ 8.466167e+04
+## var 4:
+## best............ 8.026679e+02
+## mean............ 5.262047e+02
+## variance........ 8.439291e+04
+## var 5:
+## best............ 5.111408e+01
+## mean............ 5.085246e+02
+## variance........ 8.080058e+04
+## var 6:
+## best............ 5.635628e+02
+## mean............ 4.974641e+02
+## variance........ 8.394221e+04
+## var 7:
+## best............ 7.523746e+01
+## mean............ 4.835098e+02
+## variance........ 8.724603e+04
+## var 8:
+## best............ 5.327507e+02
+## mean............ 4.813422e+02
+## variance........ 8.159640e+04
+## 
+## GENERATION: 1
+## Lexical Fit..... 2.119728e-01  3.304053e-01  3.304053e-01  4.107282e-01  4.571550e-01  6.223353e-01  7.390086e-01  7.390086e-01  8.768955e-01  9.015812e-01  9.308573e-01  9.585383e-01  9.930981e-01  9.972738e-01  9.972738e-01  9.999714e-01  9.999714e-01  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  
+## #unique......... 157, #Total UniqueCount: 357
+## var 1:
+## best............ 8.016818e+02
+## mean............ 5.982348e+02
+## variance........ 8.694416e+04
+## var 2:
+## best............ 5.176609e+02
+## mean............ 4.724074e+02
+## variance........ 4.638270e+04
+## var 3:
+## best............ 7.036755e+01
+## mean............ 4.604279e+02
+## variance........ 2.913831e+04
+## var 4:
+## best............ 8.026679e+02
+## mean............ 6.828394e+02
+## variance........ 3.738274e+04
+## var 5:
+## best............ 5.111408e+01
+## mean............ 2.038866e+02
+## variance........ 5.409952e+04
+## var 6:
+## best............ 5.635628e+02
+## mean............ 5.423847e+02
+## variance........ 3.281101e+04
+## var 7:
+## best............ 7.523746e+01
+## mean............ 1.598420e+02
+## variance........ 3.713451e+04
+## var 8:
+## best............ 5.327507e+02
+## mean............ 5.318561e+02
+## variance........ 3.638921e+04
+## 
+## GENERATION: 2
+## Lexical Fit..... 2.511810e-01  2.656589e-01  2.722232e-01  4.143044e-01  4.143044e-01  5.759694e-01  5.931290e-01  5.931290e-01  7.735291e-01  7.910027e-01  8.190479e-01  8.264443e-01  8.658951e-01  9.853573e-01  9.998058e-01  9.998058e-01  9.999714e-01  9.999714e-01  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  
+## #unique......... 144, #Total UniqueCount: 501
+## var 1:
+## best............ 8.016818e+02
+## mean............ 7.304230e+02
+## variance........ 3.502735e+04
+## var 2:
+## best............ 5.176609e+02
+## mean............ 4.955805e+02
+## variance........ 2.267694e+04
+## var 3:
+## best............ 7.036755e+01
+## mean............ 2.777512e+02
+## variance........ 3.278461e+04
+## var 4:
+## best............ 8.026679e+02
+## mean............ 7.742235e+02
+## variance........ 1.456258e+04
+## var 5:
+## best............ 3.575314e+02
+## mean............ 8.981622e+01
+## variance........ 1.300212e+04
+## var 6:
+## best............ 5.635628e+02
+## mean............ 5.588098e+02
+## variance........ 6.976409e+03
+## var 7:
+## best............ 7.523746e+01
+## mean............ 9.109923e+01
+## variance........ 9.553454e+03
+## var 8:
+## best............ 5.327507e+02
+## mean............ 5.195957e+02
+## variance........ 1.493291e+04
+## 
+## GENERATION: 3
+## Lexical Fit..... 2.722232e-01  3.903976e-01  4.796243e-01  4.796243e-01  4.968715e-01  5.481360e-01  5.713374e-01  5.931290e-01  5.931290e-01  7.071836e-01  7.086761e-01  7.675731e-01  8.658951e-01  9.853573e-01  9.991477e-01  9.991477e-01  9.999977e-01  9.999977e-01  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  
+## #unique......... 151, #Total UniqueCount: 652
+## var 1:
+## best............ 8.022797e+02
+## mean............ 7.844591e+02
+## variance........ 7.666790e+03
+## var 2:
+## best............ 5.150988e+02
+## mean............ 5.155182e+02
+## variance........ 3.061039e+03
+## var 3:
+## best............ 6.737298e+01
+## mean............ 8.968046e+01
+## variance........ 9.100900e+03
+## var 4:
+## best............ 8.019667e+02
+## mean............ 7.924045e+02
+## variance........ 4.144739e+03
+## var 5:
+## best............ 2.622318e+02
+## mean............ 2.048974e+02
+## variance........ 2.770543e+04
+## var 6:
+## best............ 5.625443e+02
+## mean............ 5.565004e+02
+## variance........ 2.896499e+03
+## var 7:
+## best............ 7.529570e+01
+## mean............ 8.757170e+01
+## variance........ 6.004672e+03
+## var 8:
+## best............ 5.358059e+02
+## mean............ 5.377200e+02
+## variance........ 1.980242e+03
+## 
+## GENERATION: 4
+## Lexical Fit..... 3.042130e-01  3.838141e-01  4.796243e-01  4.796243e-01  5.289002e-01  5.311701e-01  5.931290e-01  5.931290e-01  6.422164e-01  7.071836e-01  7.086761e-01  7.400765e-01  9.308573e-01  9.930981e-01  9.972738e-01  9.972738e-01  9.999977e-01  9.999977e-01  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  
+## #unique......... 145, #Total UniqueCount: 797
+## var 1:
+## best............ 7.798729e+02
+## mean............ 7.927595e+02
+## variance........ 2.924869e+03
+## var 2:
+## best............ 5.215228e+02
+## mean............ 5.152887e+02
+## variance........ 1.712468e+03
+## var 3:
+## best............ 7.127992e+01
+## mean............ 8.659224e+01
+## variance........ 8.106608e+03
+## var 4:
+## best............ 7.880118e+02
+## mean............ 7.867770e+02
+## variance........ 8.747569e+03
+## var 5:
+## best............ 2.591097e+02
+## mean............ 3.005928e+02
+## variance........ 6.617738e+03
+## var 6:
+## best............ 5.507733e+02
+## mean............ 5.696720e+02
+## variance........ 4.000181e+03
+## var 7:
+## best............ 8.176268e+01
+## mean............ 1.019567e+02
+## variance........ 1.480595e+04
+## var 8:
+## best............ 5.497419e+02
+## mean............ 5.321892e+02
+## variance........ 2.363866e+03
+## 
+## GENERATION: 5
+## Lexical Fit..... 3.387479e-01  3.619192e-01  4.796243e-01  4.796243e-01  5.357700e-01  5.722090e-01  5.931290e-01  5.931290e-01  6.483626e-01  6.512227e-01  6.683913e-01  7.542603e-01  9.308573e-01  9.930981e-01  9.972738e-01  9.972738e-01  9.999977e-01  9.999977e-01  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  
+## #unique......... 151, #Total UniqueCount: 948
+## var 1:
+## best............ 7.674359e+02
+## mean............ 7.733702e+02
+## variance........ 8.514374e+03
+## var 2:
+## best............ 5.256149e+02
+## mean............ 5.207912e+02
+## variance........ 2.315432e+03
+## var 3:
+## best............ 6.692696e+01
+## mean............ 7.763138e+01
+## variance........ 4.647906e+03
+## var 4:
+## best............ 8.021274e+02
+## mean............ 7.778929e+02
+## variance........ 8.392264e+03
+## var 5:
+## best............ 2.621404e+02
+## mean............ 2.782097e+02
+## variance........ 4.826483e+03
+## var 6:
+## best............ 5.619360e+02
+## mean............ 5.501295e+02
+## variance........ 4.185778e+03
+## var 7:
+## best............ 7.571214e+01
+## mean............ 8.771624e+01
+## variance........ 3.194159e+03
+## var 8:
+## best............ 5.357409e+02
+## mean............ 5.388694e+02
+## variance........ 1.898610e+03
+## 
+## GENERATION: 6
+## Lexical Fit..... 3.387479e-01  3.619192e-01  4.796243e-01  4.796243e-01  5.725968e-01  5.953418e-01  6.172239e-01  6.172239e-01  6.483626e-01  6.512227e-01  7.081177e-01  8.115705e-01  9.308573e-01  9.930981e-01  9.972738e-01  9.972738e-01  9.999977e-01  9.999977e-01  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  
+## #unique......... 153, #Total UniqueCount: 1101
+## var 1:
+## best............ 7.674359e+02
+## mean............ 7.696566e+02
+## variance........ 2.774525e+03
+## var 2:
+## best............ 5.256149e+02
+## mean............ 5.255759e+02
+## variance........ 3.440392e+03
+## var 3:
+## best............ 3.889942e+01
+## mean............ 7.682907e+01
+## variance........ 2.476969e+03
+## var 4:
+## best............ 8.021274e+02
+## mean............ 7.917382e+02
+## variance........ 5.356584e+03
+## var 5:
+## best............ 2.621404e+02
+## mean............ 2.688479e+02
+## variance........ 2.407710e+03
+## var 6:
+## best............ 5.619360e+02
+## mean............ 5.574261e+02
+## variance........ 3.249966e+03
+## var 7:
+## best............ 7.571214e+01
+## mean............ 8.807272e+01
+## variance........ 3.291802e+03
+## var 8:
+## best............ 5.357409e+02
+## mean............ 5.338843e+02
+## variance........ 3.754821e+03
+## 
+## GENERATION: 7
+## Lexical Fit..... 3.387479e-01  3.619192e-01  4.796243e-01  4.796243e-01  5.725968e-01  5.953418e-01  6.172239e-01  6.172239e-01  6.483626e-01  6.512227e-01  7.081177e-01  8.115705e-01  9.308573e-01  9.930981e-01  9.972738e-01  9.972738e-01  9.999977e-01  9.999977e-01  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  
+## #unique......... 134, #Total UniqueCount: 1235
+## var 1:
+## best............ 7.674359e+02
+## mean............ 7.551532e+02
+## variance........ 7.273240e+03
+## var 2:
+## best............ 5.256149e+02
+## mean............ 5.226729e+02
+## variance........ 2.898712e+03
+## var 3:
+## best............ 3.889942e+01
+## mean............ 6.568223e+01
+## variance........ 6.896094e+03
+## var 4:
+## best............ 8.021274e+02
+## mean............ 7.867097e+02
+## variance........ 8.133450e+03
+## var 5:
+## best............ 2.621404e+02
+## mean............ 2.723740e+02
+## variance........ 5.916911e+03
+## var 6:
+## best............ 5.619360e+02
+## mean............ 5.573427e+02
+## variance........ 3.676470e+03
+## var 7:
+## best............ 7.571214e+01
+## mean............ 9.054496e+01
+## variance........ 7.181112e+03
+## var 8:
+## best............ 5.357409e+02
+## mean............ 5.318371e+02
+## variance........ 4.408550e+03
+## 
+## GENERATION: 8
+## Lexical Fit..... 3.387479e-01  3.619192e-01  4.796243e-01  4.796243e-01  5.725968e-01  5.953418e-01  6.172239e-01  6.172239e-01  6.483626e-01  6.512227e-01  7.081177e-01  8.115705e-01  9.308573e-01  9.930981e-01  9.972738e-01  9.972738e-01  9.999977e-01  9.999977e-01  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  
+## #unique......... 126, #Total UniqueCount: 1361
+## var 1:
+## best............ 7.674359e+02
+## mean............ 7.550818e+02
+## variance........ 4.547288e+03
+## var 2:
+## best............ 5.256149e+02
+## mean............ 5.278509e+02
+## variance........ 2.864868e+03
+## var 3:
+## best............ 3.889942e+01
+## mean............ 5.907032e+01
+## variance........ 8.335447e+03
+## var 4:
+## best............ 8.021274e+02
+## mean............ 7.840407e+02
+## variance........ 1.259230e+04
+## var 5:
+## best............ 2.621404e+02
+## mean............ 2.619531e+02
+## variance........ 1.207986e+03
+## var 6:
+## best............ 5.619360e+02
+## mean............ 5.551075e+02
+## variance........ 2.745013e+03
+## var 7:
+## best............ 7.571214e+01
+## mean............ 9.035639e+01
+## variance........ 7.654200e+03
+## var 8:
+## best............ 5.357409e+02
+## mean............ 5.306048e+02
+## variance........ 4.856812e+03
+## 
+## 'wait.generations' limit reached.
+## No significant improvement in 1 generations.
+## 
+## Solution Lexical Fitness Value:
+## 3.387479e-01  3.619192e-01  4.796243e-01  4.796243e-01  5.725968e-01  5.953418e-01  6.172239e-01  6.172239e-01  6.483626e-01  6.512227e-01  7.081177e-01  8.115705e-01  9.308573e-01  9.930981e-01  9.972738e-01  9.972738e-01  9.999977e-01  9.999977e-01  1.000000e+00  1.000000e+00  1.000000e+00  1.000000e+00  
+## 
+## Parameters at the Solution:
+## 
+##  X[ 1] : 7.674359e+02
+##  X[ 2] : 5.256149e+02
+##  X[ 3] : 3.889942e+01
+##  X[ 4] : 8.021274e+02
+##  X[ 5] : 2.621404e+02
+##  X[ 6] : 5.619360e+02
+##  X[ 7] : 7.571214e+01
+##  X[ 8] : 5.357409e+02
+## 
+## Solution Found Generation 6
+## Number of Generations Run 8
+## 
+## Sat Nov 09 21:01:13 2019
+## Total run time : 0 hours 0 minutes and 12 seconds
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#The outcome variable}
+\NormalTok{Y=re78}\OperatorTok{/}\DecValTok{1000}
+\CommentTok{#}
+
+
+\CommentTok{#}
+\CommentTok{#Let's determine if balance has actually been obtained on the variables of interest}
+\CommentTok{#}
+\NormalTok{mb <-}\StringTok{ }\KeywordTok{MatchBalance}\NormalTok{(treat}\OperatorTok{~}\NormalTok{age }\OperatorTok{+}\NormalTok{educ}\OperatorTok{+}\NormalTok{black}\OperatorTok{+}\StringTok{ }\NormalTok{hisp}\OperatorTok{+}\StringTok{ }\NormalTok{married}\OperatorTok{+}\StringTok{ }\NormalTok{nodegr}\OperatorTok{+}\StringTok{ }\NormalTok{re75}\OperatorTok{+}\StringTok{ }\NormalTok{re74}\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(re74}\OperatorTok{*}\NormalTok{re75) }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(re74}\OperatorTok{*}\NormalTok{nodegr),}
+                   \DataTypeTok{match.out=}\NormalTok{out, }\DataTypeTok{nboots=}\DecValTok{500}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in MatchBalance(treat ~ age + educ + black + hisp + married +
+## nodegr + : Object not of class 'Match'
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## ***** (V1) age *****
+## before matching:
+## mean treatment........ 25.816 
+## mean control.......... 25.054 
+## std mean diff......... 10.655 
+## 
+## mean raw eQQ diff..... 0.94054 
+## med  raw eQQ diff..... 1 
+## max  raw eQQ diff..... 7 
+## 
+## mean eCDF diff........ 0.025364 
+## med  eCDF diff........ 0.022193 
+## max  eCDF diff........ 0.065177 
+## 
+## var ratio (Tr/Co)..... 1.0278 
+## T-test p-value........ 0.26594 
+## KS Bootstrap p-value.. 0.526 
+## KS Naive p-value...... 0.7481 
+## KS Statistic.......... 0.065177 
+## 
+## 
+## ***** (V2) educ *****
+## before matching:
+## mean treatment........ 10.346 
+## mean control.......... 10.088 
+## std mean diff......... 12.806 
+## 
+## mean raw eQQ diff..... 0.40541 
+## med  raw eQQ diff..... 0 
+## max  raw eQQ diff..... 2 
+## 
+## mean eCDF diff........ 0.028698 
+## med  eCDF diff........ 0.012682 
+## max  eCDF diff........ 0.12651 
+## 
+## var ratio (Tr/Co)..... 1.5513 
+## T-test p-value........ 0.15017 
+## KS Bootstrap p-value.. 0.012 
+## KS Naive p-value...... 0.062873 
+## KS Statistic.......... 0.12651 
+## 
+## 
+## ***** (V3) black *****
+## before matching:
+## mean treatment........ 0.84324 
+## mean control.......... 0.82692 
+## std mean diff......... 4.4767 
+## 
+## mean raw eQQ diff..... 0.016216 
+## med  raw eQQ diff..... 0 
+## max  raw eQQ diff..... 1 
+## 
+## mean eCDF diff........ 0.0081601 
+## med  eCDF diff........ 0.0081601 
+## max  eCDF diff........ 0.01632 
+## 
+## var ratio (Tr/Co)..... 0.92503 
+## T-test p-value........ 0.64736 
+## 
+## 
+## ***** (V4) hisp *****
+## before matching:
+## mean treatment........ 0.059459 
+## mean control.......... 0.10769 
+## std mean diff......... -20.341 
+## 
+## mean raw eQQ diff..... 0.048649 
+## med  raw eQQ diff..... 0 
+## max  raw eQQ diff..... 1 
+## 
+## mean eCDF diff........ 0.024116 
+## med  eCDF diff........ 0.024116 
+## max  eCDF diff........ 0.048233 
+## 
+## var ratio (Tr/Co)..... 0.58288 
+## T-test p-value........ 0.064043 
+## 
+## 
+## ***** (V5) married *****
+## before matching:
+## mean treatment........ 0.18919 
+## mean control.......... 0.15385 
+## std mean diff......... 8.9995 
+## 
+## mean raw eQQ diff..... 0.037838 
+## med  raw eQQ diff..... 0 
+## max  raw eQQ diff..... 1 
+## 
+## mean eCDF diff........ 0.017672 
+## med  eCDF diff........ 0.017672 
+## max  eCDF diff........ 0.035343 
+## 
+## var ratio (Tr/Co)..... 1.1802 
+## T-test p-value........ 0.33425 
+## 
+## 
+## ***** (V6) nodegr *****
+## before matching:
+## mean treatment........ 0.70811 
+## mean control.......... 0.83462 
+## std mean diff......... -27.751 
+## 
+## mean raw eQQ diff..... 0.12432 
+## med  raw eQQ diff..... 0 
+## max  raw eQQ diff..... 1 
+## 
+## mean eCDF diff........ 0.063254 
+## med  eCDF diff........ 0.063254 
+## max  eCDF diff........ 0.12651 
+## 
+## var ratio (Tr/Co)..... 1.4998 
+## T-test p-value........ 0.0020368 
+## 
+## 
+## ***** (V7) re75 *****
+## before matching:
+## mean treatment........ 1532.1 
+## mean control.......... 1266.9 
+## std mean diff......... 8.2363 
+## 
+## mean raw eQQ diff..... 367.61 
+## med  raw eQQ diff..... 0 
+## max  raw eQQ diff..... 2110.2 
+## 
+## mean eCDF diff........ 0.050834 
+## med  eCDF diff........ 0.061954 
+## max  eCDF diff........ 0.10748 
+## 
+## var ratio (Tr/Co)..... 1.0763 
+## T-test p-value........ 0.38527 
+## KS Bootstrap p-value.. 0.072 
+## KS Naive p-value...... 0.16449 
+## KS Statistic.......... 0.10748 
+## 
+## 
+## ***** (V8) re74 *****
+## before matching:
+## mean treatment........ 2095.6 
+## mean control.......... 2107 
+## std mean diff......... -0.23437 
+## 
+## mean raw eQQ diff..... 487.98 
+## med  raw eQQ diff..... 0 
+## max  raw eQQ diff..... 8413 
+## 
+## mean eCDF diff........ 0.019223 
+## med  eCDF diff........ 0.0158 
+## max  eCDF diff........ 0.047089 
+## 
+## var ratio (Tr/Co)..... 0.7381 
+## T-test p-value........ 0.98186 
+## KS Bootstrap p-value.. 0.582 
+## KS Naive p-value...... 0.97023 
+## KS Statistic.......... 0.047089 
+## 
+## 
+## ***** (V9) I(re74 * re75) *****
+## before matching:
+## mean treatment........ 13118591 
+## mean control.......... 14530303 
+## std mean diff......... -2.7799 
+## 
+## mean raw eQQ diff..... 3278733 
+## med  raw eQQ diff..... 0 
+## max  raw eQQ diff..... 188160151 
+## 
+## mean eCDF diff........ 0.022723 
+## med  eCDF diff........ 0.014449 
+## max  eCDF diff........ 0.061019 
+## 
+## var ratio (Tr/Co)..... 0.69439 
+## T-test p-value........ 0.79058 
+## KS Bootstrap p-value.. 0.356 
+## KS Naive p-value...... 0.81575 
+## KS Statistic.......... 0.061019 
+## 
+## 
+## ***** (V10) I(re74 * nodegr) *****
+## before matching:
+## mean treatment........ 1094.1 
+## mean control.......... 1778.5 
+## std mean diff......... -20.192 
+## 
+## mean raw eQQ diff..... 650.66 
+## med  raw eQQ diff..... 0 
+## max  raw eQQ diff..... 15568 
+## 
+## mean eCDF diff........ 0.027631 
+## med  eCDF diff........ 0.02895 
+## max  eCDF diff........ 0.05343 
+## 
+## var ratio (Tr/Co)..... 0.39757 
+## T-test p-value........ 0.10083 
+## KS Bootstrap p-value.. 0.334 
+## KS Naive p-value...... 0.91719 
+## KS Statistic.......... 0.05343 
+## 
+## 
+## Before Matching Minimum p.value: 0.0020368 
+## Variable Name(s): nodegr  Number(s): 6
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Now that GenMatch() has found the optimal weights, let's estimate}
+\CommentTok{# our causal effect of interest using those weights}
+\CommentTok{#}
+\NormalTok{mout <-}\StringTok{ }\KeywordTok{Match}\NormalTok{(}\DataTypeTok{Y=}\NormalTok{Y, }\DataTypeTok{Tr=}\NormalTok{treat, }\DataTypeTok{X=}\NormalTok{X, }\DataTypeTok{estimand=}\StringTok{"ATE"}\NormalTok{, }\DataTypeTok{Weight.matrix=}\NormalTok{out)}
+
+\NormalTok{psmatch3.mod <-mout}
+
+\KeywordTok{summary}\NormalTok{(psmatch3.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Estimate...  2.0146 
+## AI SE......  0.76038 
+## T-stat.....  2.6495 
+## p.val......  0.0080614 
+## 
+## Original number of observations..............  445 
+## Original number of treated obs...............  185 
+## Matched number of observations...............  445 
+## Matched number of observations  (unweighted).  615
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#########OTHER MATCHING TECHNIQUES WITH MATCHIT}
+
+\CommentTok{# NN match on PS score: k:1, greedy, without replacement or calipers}
+\NormalTok{psmatch4 <-}\StringTok{ }\KeywordTok{matchit}\NormalTok{(treat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re75}
+                    \OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr}\OperatorTok{:}\NormalTok{re75,  }\DataTypeTok{distance =} \StringTok{"logit"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"nearest"}\NormalTok{, }\DataTypeTok{discard=} \StringTok{"control"}\NormalTok{, }
+                    \DataTypeTok{ratio =} \DecValTok{3}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ lalonde)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in matchit2nearest(c(`1` = 1L, `2` = 1L, `3` = 1L, `4` = 1L, `5`
+## = 1L, : Not enough control units for 3 matches for each treated unit when
+## matching without replacement. Not all treated units will receive 3 matches
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Check balance}
+\KeywordTok{summary}\NormalTok{(psmatch4, }\DataTypeTok{standardize=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## matchit(formula = treat ~ age + educ + black + hisp + nodegr + 
+##     married + re75 + I(age^2) + nodegr:re75, data = lalonde, 
+##     method = "nearest", distance = "logit", discard = "control", 
+##     ratio = 3)
+## 
+## Summary of balance for all data:
+##             Means Treated Means Control SD Control Std. Mean Diff.
+## distance           0.4358        0.4014     0.0873          0.3648
+## age               25.8162       25.0538     7.0577          0.1066
+## educ              10.3459       10.0885     1.6143          0.1281
+## black              0.8432        0.8269     0.3790          0.0448
+## hisp               0.0595        0.1077     0.3106         -0.2034
+## nodegr             0.7081        0.8346     0.3722         -0.2775
+## married            0.1892        0.1538     0.3615          0.0900
+## re75            1532.0556     1266.9092  3102.9830          0.0824
+## I(age^2)         717.3946      677.3154   428.7844          0.0929
+## nodegr:re75     1134.9556     1081.9148  3016.7335          0.0179
+##             eCDF Med eCDF Mean eCDF Max
+## distance      0.1133    0.1043   0.2164
+## age           0.0222    0.0254   0.0652
+## educ          0.0127    0.0287   0.1265
+## black         0.0082    0.0082   0.0163
+## hisp          0.0241    0.0241   0.0482
+## nodegr        0.0633    0.0633   0.1265
+## married       0.0177    0.0177   0.0353
+## re75          0.0620    0.0508   0.1075
+## I(age^2)      0.0222    0.0254   0.0652
+## nodegr:re75   0.0275    0.0283   0.0672
+## 
+## 
+## Summary of balance for matched data:
+##             Means Treated Means Control SD Control Std. Mean Diff.
+## distance           0.4358        0.3957     0.0735          0.4260
+## age               25.8162       25.4432     7.2852          0.0521
+## educ              10.3459       10.0081     1.5160          0.1680
+## black              0.8432        0.8703     0.3367         -0.0741
+## hisp               0.0595        0.0757     0.2650         -0.0684
+## nodegr             0.7081        0.8838     0.3211         -0.3854
+## married            0.1892        0.1568     0.3643          0.0826
+## re75            1532.0556     1109.8678  2853.0850          0.1311
+## I(age^2)         717.3946      700.2216   447.9698          0.0398
+## nodegr:re75     1134.9556      979.8717  2781.2453          0.0524
+##             eCDF Med eCDF Mean eCDF Max
+## distance      0.1015    0.0925   0.2002
+## age           0.0176    0.0188   0.0423
+## educ          0.0111    0.0266   0.1206
+## black         0.0067    0.0067   0.0133
+## hisp          0.0081    0.0081   0.0162
+## nodegr        0.0603    0.0603   0.1206
+## married       0.0149    0.0149   0.0298
+## re75          0.0526    0.0491   0.1109
+## I(age^2)      0.0176    0.0188   0.0423
+## nodegr:re75   0.0282    0.0279   0.0722
+## 
+## Percent Balance Improvement:
+##             Std. Mean Diff. eCDF Med eCDF Mean eCDF Max
+## distance           -16.7760  10.4412   11.3633   7.5192
+## age                 51.0772  20.5762   25.8294  35.1722
+## educ               -31.2071  12.5465    7.4563   4.6876
+## black              -65.6051  18.3191   18.3191  18.3191
+## hisp                66.3793  66.3347   66.3347  66.3347
+## nodegr             -38.8661   4.6876    4.6876   4.6876
+## married              8.2353  15.6082   15.6082  15.6082
+## re75               -59.2282  15.1154    3.4350  -3.1649
+## I(age^2)            57.1524  20.5762   25.8294  35.1722
+## nodegr:re75       -192.3864  -2.2957    1.6559  -7.5303
+## 
+## Sample sizes:
+##           Control Treated
+## All           260     185
+## Matched       251     185
+## Unmatched       0       0
+## Discarded       9       0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch4)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-1.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-2.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch4, }\DataTypeTok{type=}\StringTok{"hist"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\KeywordTok{plot}\NormalTok{(psmatch4, }\DataTypeTok{type=}\StringTok{"jitter"}\NormalTok{, }\DataTypeTok{interactive =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create matched data for analysis}
+\NormalTok{psmatch4.data <-}\StringTok{ }\KeywordTok{match.data}\NormalTok{(psmatch4)}
+
+\CommentTok{# NN match on PS score: k:1, with replacement (greedy doesn't matter), no calipers}
+\NormalTok{psmatch5 <-}\StringTok{ }\KeywordTok{matchit}\NormalTok{(treat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re75}\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr}\OperatorTok{:}\NormalTok{re75, }
+                    \DataTypeTok{distance =} \StringTok{"logit"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"nearest"}\NormalTok{, }\DataTypeTok{discard=} \StringTok{"control"}\NormalTok{, }
+                    \DataTypeTok{ratio =} \DecValTok{3}\NormalTok{, }\DataTypeTok{replace=} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ lalonde)}
+\CommentTok{# Check balance}
+\KeywordTok{summary}\NormalTok{(psmatch5, }\DataTypeTok{standardize=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## matchit(formula = treat ~ age + educ + black + hisp + nodegr + 
+##     married + re75 + I(age^2) + nodegr:re75, data = lalonde, 
+##     method = "nearest", distance = "logit", discard = "control", 
+##     ratio = 3, replace = TRUE)
+## 
+## Summary of balance for all data:
+##             Means Treated Means Control SD Control Std. Mean Diff.
+## distance           0.4358        0.4014     0.0873          0.3648
+## age               25.8162       25.0538     7.0577          0.1066
+## educ              10.3459       10.0885     1.6143          0.1281
+## black              0.8432        0.8269     0.3790          0.0448
+## hisp               0.0595        0.1077     0.3106         -0.2034
+## nodegr             0.7081        0.8346     0.3722         -0.2775
+## married            0.1892        0.1538     0.3615          0.0900
+## re75            1532.0556     1266.9092  3102.9830          0.0824
+## I(age^2)         717.3946      677.3154   428.7844          0.0929
+## nodegr:re75     1134.9556     1081.9148  3016.7335          0.0179
+##             eCDF Med eCDF Mean eCDF Max
+## distance      0.1133    0.1043   0.2164
+## age           0.0222    0.0254   0.0652
+## educ          0.0127    0.0287   0.1265
+## black         0.0082    0.0082   0.0163
+## hisp          0.0241    0.0241   0.0482
+## nodegr        0.0633    0.0633   0.1265
+## married       0.0177    0.0177   0.0353
+## re75          0.0620    0.0508   0.1075
+## I(age^2)      0.0222    0.0254   0.0652
+## nodegr:re75   0.0275    0.0283   0.0672
+## 
+## 
+## Summary of balance for matched data:
+##             Means Treated Means Control SD Control Std. Mean Diff.
+## distance           0.4358        0.4349     0.0922          0.0094
+## age               25.8162       25.8955     7.6764         -0.0111
+## educ              10.3459       10.1802     1.8381          0.0824
+## black              0.8432        0.8775     0.3287         -0.0939
+## hisp               0.0595        0.0559     0.2302          0.0152
+## nodegr             0.7081        0.7153     0.4524         -0.0158
+## married            0.1892        0.1982     0.3996         -0.0229
+## re75            1532.0556     1315.0271  3480.0797          0.0674
+## I(age^2)         717.3946      729.2144   493.0352         -0.0274
+## nodegr:re75     1134.9556      937.8923  3318.3955          0.0666
+##             eCDF Med eCDF Mean eCDF Max
+## distance      0.0813    0.0711   0.1556
+## age           0.0153    0.0181   0.0401
+## educ          0.0154    0.0255   0.0860
+## black         0.0098    0.0098   0.0195
+## hisp          0.0046    0.0046   0.0092
+## nodegr        0.0430    0.0430   0.0860
+## married       0.0064    0.0064   0.0127
+## re75          0.0674    0.0669   0.1504
+## I(age^2)      0.0153    0.0181   0.0401
+## nodegr:re75   0.0328    0.0470   0.1173
+## 
+## Percent Balance Improvement:
+##             Std. Mean Diff. eCDF Med eCDF Mean eCDF Max
+## distance            97.4245  28.2416   31.8827  28.1206
+## age                 89.6009  31.2302   28.8327  38.4089
+## educ                35.6210 -21.4963   11.1965  32.0122
+## black             -109.7665 -19.4954  -19.4954 -19.4954
+## hisp                92.5287  80.9922   80.9922  80.9922
+## nodegr              94.3029  32.0122   32.0122  32.0122
+## married             74.5098  64.0138   64.0138  64.0138
+## re75                18.1477  -8.7824  -31.5179 -39.9003
+## I(age^2)            70.5089  31.2302   28.8327  38.4089
+## nodegr:re75       -271.5319 -19.0825  -66.1010 -74.6828
+## 
+## Sample sizes:
+##           Control Treated
+## All           260     185
+## Matched       204     185
+## Unmatched      47       0
+## Discarded       9       0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch5)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-6.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-7.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-8.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch5, }\DataTypeTok{type=}\StringTok{"hist"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-9.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\KeywordTok{plot}\NormalTok{(psmatch5, }\DataTypeTok{type=}\StringTok{"jitter"}\NormalTok{, }\DataTypeTok{interactive =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-10.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#now ratio 1}
+\NormalTok{psmatch6 <-}\StringTok{ }\KeywordTok{matchit}\NormalTok{(treat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}
+\StringTok{                      }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{re74  }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(re74}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(re75}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}
+\StringTok{                      }\NormalTok{u74 }\OperatorTok{+}\StringTok{ }\NormalTok{u75,     }\DataTypeTok{ratio =} \DecValTok{1}\NormalTok{, }\DataTypeTok{replace=} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ lalonde)}
+
+\CommentTok{# Check balance}
+\KeywordTok{summary}\NormalTok{(psmatch6, }\DataTypeTok{standardize=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## matchit(formula = treat ~ age + I(age^2) + educ + I(educ^2) + 
+##     black + hisp + married + nodegr + re74 + I(re74^2) + re75 + 
+##     I(re75^2) + u74 + u75, data = lalonde, ratio = 1, replace = TRUE)
+## 
+## Summary of balance for all data:
+##           Means Treated Means Control   SD Control Std. Mean Diff.
+## distance   4.468000e-01  3.936000e-01 1.065000e-01          0.4533
+## age        2.581620e+01  2.505380e+01 7.057700e+00          0.1066
+## I(age^2)   7.173946e+02  6.773154e+02 4.287844e+02          0.0929
+## educ       1.034590e+01  1.008850e+01 1.614300e+00          0.1281
+## I(educ^2)  1.110595e+02  1.043731e+02 3.048290e+01          0.1701
+## black      8.432000e-01  8.269000e-01 3.790000e-01          0.0448
+## hisp       5.950000e-02  1.077000e-01 3.106000e-01         -0.2034
+## married    1.892000e-01  1.538000e-01 3.615000e-01          0.0900
+## nodegr     7.081000e-01  8.346000e-01 3.722000e-01         -0.2775
+## re74       2.095574e+03  2.107027e+03 5.687907e+03         -0.0023
+## I(re74^2)  2.814143e+07  3.666741e+07 1.607542e+08         -0.0747
+## re75       1.532056e+03  1.266909e+03 3.102983e+03          0.0824
+## I(re75^2)  1.265475e+07  1.119653e+07 4.635935e+07          0.0260
+## u74        7.081000e-01  7.500000e-01 4.338000e-01         -0.0919
+## u75        6.000000e-01  6.846000e-01 4.656000e-01         -0.1723
+##           eCDF Med eCDF Mean eCDF Max
+## distance    0.1574    0.1340   0.2244
+## age         0.0222    0.0254   0.0652
+## I(age^2)    0.0222    0.0254   0.0652
+## educ        0.0127    0.0287   0.1265
+## I(educ^2)   0.0127    0.0287   0.1265
+## black       0.0082    0.0082   0.0163
+## hisp        0.0241    0.0241   0.0482
+## married     0.0177    0.0177   0.0353
+## nodegr      0.0633    0.0633   0.1265
+## re74        0.0158    0.0192   0.0471
+## I(re74^2)   0.0158    0.0192   0.0471
+## re75        0.0620    0.0508   0.1075
+## I(re75^2)   0.0620    0.0508   0.1075
+## u74         0.0209    0.0209   0.0419
+## u75         0.0423    0.0423   0.0846
+## 
+## 
+## Summary of balance for matched data:
+##           Means Treated Means Control   SD Control Std. Mean Diff.
+## distance   4.468000e-01  4.461000e-01 1.155000e-01          0.0055
+## age        2.581620e+01  2.477300e+01 6.786800e+00          0.1458
+## I(age^2)   7.173946e+02  6.593459e+02 4.415750e+02          0.1346
+## educ       1.034590e+01  1.049190e+01 1.836400e+00         -0.0726
+## I(educ^2)  1.110595e+02  1.134216e+02 3.476370e+01         -0.0601
+## black      8.432000e-01  8.595000e-01 3.491000e-01         -0.0445
+## hisp       5.950000e-02  4.860000e-02 2.161000e-01          0.0456
+## married    1.892000e-01  1.676000e-01 3.752000e-01          0.0551
+## nodegr     7.081000e-01  6.919000e-01 4.638000e-01          0.0356
+## re74       2.095574e+03  1.497326e+03 3.070620e+03          0.1224
+## I(re74^2)  2.814143e+07  1.158575e+07 3.152906e+07          0.1451
+## re75       1.532056e+03  1.263170e+03 2.612701e+03          0.0835
+## I(re75^2)  1.265475e+07  8.360307e+06 2.728585e+07          0.0766
+## u74        7.081000e-01  7.081000e-01 4.567000e-01          0.0000
+## u75        6.000000e-01  6.216000e-01 4.872000e-01         -0.0440
+##           eCDF Med eCDF Mean eCDF Max
+## distance    0.0595    0.0524   0.1027
+## age         0.0468    0.0453   0.0955
+## I(age^2)    0.0468    0.0453   0.0955
+## educ        0.0225    0.0247   0.0595
+## I(educ^2)   0.0225    0.0247   0.0595
+## black       0.0153    0.0153   0.0306
+## hisp        0.0018    0.0018   0.0036
+## married     0.0090    0.0090   0.0180
+## nodegr      0.0288    0.0288   0.0577
+## re74        0.0270    0.0289   0.0667
+## I(re74^2)   0.0270    0.0289   0.0667
+## re75        0.0252    0.0315   0.0775
+## I(re75^2)   0.0252    0.0315   0.0775
+## u74         0.0063    0.0063   0.0126
+## u75         0.0153    0.0153   0.0306
+## 
+## Percent Balance Improvement:
+##           Std. Mean Diff.  eCDF Med eCDF Mean eCDF Max
+## distance          98.7932   62.2318   60.8874  54.2381
+## age              -36.8421 -111.0851  -78.4836 -46.5178
+## I(age^2)         -44.8348 -111.0851  -78.4836 -46.5178
+## educ              43.3185  -77.5956   13.8939  52.9992
+## I(educ^2)         64.6720  -77.5956   13.8939  52.9992
+## black              0.6369  -87.6858  -87.6858 -87.6858
+## hisp              77.5862   92.5287   92.5287  92.5287
+## married           38.8235   49.0196   49.0196  49.0196
+## nodegr            87.1816   54.4234   54.4234  54.4234
+## re74           -5123.5908  -71.0526  -50.5459 -41.5747
+## I(re74^2)        -94.1793  -71.0526  -50.5459 -41.5747
+## re75              -1.4102   59.2841   38.0495  27.9175
+## I(re75^2)       -194.4986   59.2841   38.0495  27.9175
+## u74              100.0000   69.8925   69.8925  69.8925
+## u75               74.4472   63.8002   63.8002  63.8002
+## 
+## Sample sizes:
+##           Control Treated
+## All           260     185
+## Matched       111     185
+## Unmatched     149       0
+## Discarded       0       0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch6)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-11.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-12.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-13.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-14.pdf}
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-15.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch6, }\DataTypeTok{type=}\StringTok{"hist"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-16.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\KeywordTok{plot}\NormalTok{(psmatch6, }\DataTypeTok{type=}\StringTok{"jitter"}\NormalTok{, }\DataTypeTok{interactive =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-17.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# NN match on PS score: k:1, with replacement, add calipers (instead of discarding outside common support)}
+\NormalTok{psmatch7 <-}\StringTok{ }\KeywordTok{matchit}\NormalTok{(treat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }
+\StringTok{                      }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr}\OperatorTok{:}\NormalTok{re75, }
+                    \DataTypeTok{distance =} \StringTok{"logit"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"nearest"}\NormalTok{, }\DataTypeTok{caliper =} \FloatTok{0.3}\NormalTok{, }
+                    \DataTypeTok{ratio =} \DecValTok{3}\NormalTok{, }\DataTypeTok{replace=} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ lalonde)}
+
+\CommentTok{# Check balance}
+\KeywordTok{summary}\NormalTok{(psmatch7, }\DataTypeTok{standardize=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## matchit(formula = treat ~ age + educ + black + hisp + nodegr + 
+##     married + re75 + I(age^2) + nodegr:re75, data = lalonde, 
+##     method = "nearest", distance = "logit", caliper = 0.3, ratio = 3, 
+##     replace = TRUE)
+## 
+## Summary of balance for all data:
+##             Means Treated Means Control SD Control Std. Mean Diff.
+## distance           0.4358        0.4014     0.0873          0.3648
+## age               25.8162       25.0538     7.0577          0.1066
+## educ              10.3459       10.0885     1.6143          0.1281
+## black              0.8432        0.8269     0.3790          0.0448
+## hisp               0.0595        0.1077     0.3106         -0.2034
+## nodegr             0.7081        0.8346     0.3722         -0.2775
+## married            0.1892        0.1538     0.3615          0.0900
+## re75            1532.0556     1266.9092  3102.9830          0.0824
+## I(age^2)         717.3946      677.3154   428.7844          0.0929
+## nodegr:re75     1134.9556     1081.9148  3016.7335          0.0179
+##             eCDF Med eCDF Mean eCDF Max
+## distance      0.1133    0.1043   0.2164
+## age           0.0222    0.0254   0.0652
+## educ          0.0127    0.0287   0.1265
+## black         0.0082    0.0082   0.0163
+## hisp          0.0241    0.0241   0.0482
+## nodegr        0.0633    0.0633   0.1265
+## married       0.0177    0.0177   0.0353
+## re75          0.0620    0.0508   0.1075
+## I(age^2)      0.0222    0.0254   0.0652
+## nodegr:re75   0.0275    0.0283   0.0672
+## 
+## 
+## Summary of balance for matched data:
+##             Means Treated Means Control SD Control Std. Mean Diff.
+## distance           0.4344        0.4333     0.0937          0.0115
+## age               25.7772       26.0000     7.4336         -0.0311
+## educ              10.3370       10.3188     1.7348          0.0090
+## black              0.8424        0.8804     0.3252         -0.1044
+## hisp               0.0598        0.0580     0.2342          0.0076
+## nodegr             0.7120        0.7120     0.4539          0.0000
+## married            0.1848        0.1866     0.3905         -0.0046
+## re75            1480.9179     1492.6815  3276.7843         -0.0037
+## I(age^2)         715.3750      731.0145   470.2597         -0.0363
+## nodegr:re75     1141.1238     1162.9123  3168.9119         -0.0074
+##             eCDF Med eCDF Mean eCDF Max
+## distance      0.0795    0.0748   0.1685
+## age           0.0144    0.0160   0.0373
+## educ          0.0117    0.0267   0.1024
+## black         0.0031    0.0031   0.0061
+## hisp          0.0166    0.0166   0.0331
+## nodegr        0.0511    0.0511   0.1022
+## married       0.0083    0.0083   0.0166
+## re75          0.0457    0.0432   0.0946
+## I(age^2)      0.0144    0.0160   0.0373
+## nodegr:re75   0.0293    0.0275   0.0662
+## 
+## Percent Balance Improvement:
+##             Std. Mean Diff. eCDF Med eCDF Mean eCDF Max
+## distance            96.8534  29.8767   28.3596  22.1537
+## age                 70.7719  35.3118   36.8670  42.8109
+## educ                92.9643   7.8437    6.8180  19.0599
+## black             -133.1072  62.5732   62.5732  62.5732
+## hisp                96.2441  31.2963   31.2963  31.2963
+## nodegr             100.0000  19.2119   19.2119  19.2119
+## married             94.8743  52.9157   52.9157  52.9157
+## re75                95.5634  26.2122   15.0825  11.9838
+## I(age^2)            60.9785  35.3118   36.8670  42.8109
+## nodegr:re75         58.9212  -6.5032    2.9319   1.4482
+## 
+## Sample sizes:
+##           Control Treated
+## All           260     185
+## Matched       226     184
+## Unmatched      34       1
+## Discarded       0       0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch7, }\DataTypeTok{type=}\StringTok{"jitter"}\NormalTok{, }\DataTypeTok{interactive =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-18.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(psmatch7, }\DataTypeTok{type=}\StringTok{"hist"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{matching_lab_final_files/figure-latex/unnamed-chunk-2-19.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create matched data for analysis}
+\NormalTok{psmatch4.data <-}\StringTok{ }\KeywordTok{match.data}\NormalTok{(psmatch4)}
+\NormalTok{psmatch5.data <-}\StringTok{ }\KeywordTok{match.data}\NormalTok{(psmatch5)}
+\NormalTok{psmatch6.data <-}\StringTok{ }\KeywordTok{match.data}\NormalTok{(psmatch6)}
+\NormalTok{psmatch7.data <-}\StringTok{ }\KeywordTok{match.data}\NormalTok{(psmatch7)}
+
+\CommentTok{#OUTCOME ANALYSIS}
+\NormalTok{psmatch4.mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }
+\StringTok{                     }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{educ}\OperatorTok{:}\NormalTok{re74, }
+                   \DataTypeTok{data =}\NormalTok{ psmatch4.data)}
+\KeywordTok{summary}\NormalTok{(psmatch4.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = re78 ~ treat + age + educ + black + hisp + nodegr + 
+##     married + re74 + re75 + I(age^2) + I(educ^2) + educ:re74, 
+##     data = psmatch4.data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -10960  -4335  -1826   3054  53929 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)  5.540e+03  6.611e+03   0.838   0.4025  
+## treat        1.548e+03  6.483e+02   2.388   0.0174 *
+## age          1.771e+02  2.799e+02   0.633   0.5273  
+## educ        -1.180e+03  1.249e+03  -0.945   0.3453  
+## black       -2.221e+03  1.178e+03  -1.885   0.0601 .
+## hisp         8.434e+01  1.666e+03   0.051   0.9597  
+## nodegr       9.301e+02  1.238e+03   0.751   0.4529  
+## married     -2.939e+02  8.995e+02  -0.327   0.7441  
+## re74        -3.724e-01  3.033e-01  -1.228   0.2202  
+## re75         5.696e-02  1.372e-01   0.415   0.6782  
+## I(age^2)    -2.226e+00  4.585e+00  -0.486   0.6276  
+## I(educ^2)    8.492e+01  7.004e+01   1.212   0.2260  
+## educ:re74    4.462e-02  2.918e-02   1.529   0.1271  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6558 on 423 degrees of freedom
+## Multiple R-squared:  0.06404,    Adjusted R-squared:  0.03749 
+## F-statistic: 2.412 on 12 and 423 DF,  p-value: 0.00496
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{psmatch5.mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }
+\StringTok{                     }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{educ}\OperatorTok{:}\NormalTok{re74, }
+                   \DataTypeTok{data =}\NormalTok{ psmatch5.data, }\DataTypeTok{weights =}\NormalTok{ weights)}
+\KeywordTok{summary}\NormalTok{(psmatch5.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = re78 ~ treat + age + educ + black + hisp + nodegr + 
+##     married + re74 + re75 + I(age^2) + I(educ^2) + educ:re74, 
+##     data = psmatch5.data, weights = weights)
+## 
+## Weighted Residuals:
+##    Min     1Q Median     3Q    Max 
+## -11368  -3965  -1369   3020  53624 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)   
+## (Intercept)  4.877e+03  6.192e+03   0.788  0.43147   
+## treat        1.954e+03  6.511e+02   3.001  0.00287 **
+## age          2.996e+02  2.773e+02   1.080  0.28070   
+## educ        -1.879e+03  1.224e+03  -1.535  0.12568   
+## black       -1.880e+03  1.186e+03  -1.585  0.11383   
+## hisp         6.185e+02  1.769e+03   0.350  0.72675   
+## nodegr       1.905e+03  1.220e+03   1.562  0.11918   
+## married     -2.572e+02  9.003e+02  -0.286  0.77531   
+## re74        -5.193e-01  3.250e-01  -1.598  0.11089   
+## re75         3.133e-02  1.419e-01   0.221  0.82543   
+## I(age^2)    -3.554e+00  4.459e+00  -0.797  0.42586   
+## I(educ^2)    1.228e+02  6.856e+01   1.791  0.07416 . 
+## educ:re74    6.235e-02  2.969e-02   2.100  0.03639 * 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6308 on 376 degrees of freedom
+## Multiple R-squared:  0.09547,    Adjusted R-squared:  0.0666 
+## F-statistic: 3.307 on 12 and 376 DF,  p-value: 0.0001412
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Added weights option, weights = weights}
+\CommentTok{# matchit automatically created frequency weights (named `weights') in the matched data frame}
+\NormalTok{psmatch6.mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }
+\StringTok{                     }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{educ}\OperatorTok{:}\NormalTok{re74, }
+                   \DataTypeTok{data =}\NormalTok{ psmatch5.data, }\DataTypeTok{weights =}\NormalTok{ weights)}
+\KeywordTok{summary}\NormalTok{(psmatch6.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = re78 ~ treat + age + educ + black + hisp + nodegr + 
+##     married + re74 + re75 + I(age^2) + I(educ^2) + educ:re74, 
+##     data = psmatch5.data, weights = weights)
+## 
+## Weighted Residuals:
+##    Min     1Q Median     3Q    Max 
+## -11368  -3965  -1369   3020  53624 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)   
+## (Intercept)  4.877e+03  6.192e+03   0.788  0.43147   
+## treat        1.954e+03  6.511e+02   3.001  0.00287 **
+## age          2.996e+02  2.773e+02   1.080  0.28070   
+## educ        -1.879e+03  1.224e+03  -1.535  0.12568   
+## black       -1.880e+03  1.186e+03  -1.585  0.11383   
+## hisp         6.185e+02  1.769e+03   0.350  0.72675   
+## nodegr       1.905e+03  1.220e+03   1.562  0.11918   
+## married     -2.572e+02  9.003e+02  -0.286  0.77531   
+## re74        -5.193e-01  3.250e-01  -1.598  0.11089   
+## re75         3.133e-02  1.419e-01   0.221  0.82543   
+## I(age^2)    -3.554e+00  4.459e+00  -0.797  0.42586   
+## I(educ^2)    1.228e+02  6.856e+01   1.791  0.07416 . 
+## educ:re74    6.235e-02  2.969e-02   2.100  0.03639 * 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6308 on 376 degrees of freedom
+## Multiple R-squared:  0.09547,    Adjusted R-squared:  0.0666 
+## F-statistic: 3.307 on 12 and 376 DF,  p-value: 0.0001412
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{psmatch6.mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }
+\StringTok{                     }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{educ}\OperatorTok{:}\NormalTok{re74, }
+                   \DataTypeTok{data =}\NormalTok{ psmatch6.data, }\DataTypeTok{weights =}\NormalTok{ weights)}
+\KeywordTok{summary}\NormalTok{(psmatch6.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = re78 ~ treat + age + educ + black + hisp + nodegr + 
+##     married + re74 + re75 + I(age^2) + I(educ^2) + educ:re74, 
+##     data = psmatch6.data, weights = weights)
+## 
+## Weighted Residuals:
+##    Min     1Q Median     3Q    Max 
+## -11575  -4164  -1079   3048  53011 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)   
+## (Intercept)  4.644e+03  7.250e+03   0.641  0.52235   
+## treat        1.955e+03  7.970e+02   2.453  0.01475 * 
+## age          5.646e+02  3.351e+02   1.685  0.09310 . 
+## educ        -2.494e+03  1.407e+03  -1.772  0.07743 . 
+## black       -2.598e+03  1.340e+03  -1.939  0.05347 . 
+## hisp         6.395e+02  2.102e+03   0.304  0.76121   
+## nodegr       1.891e+03  1.419e+03   1.333  0.18371   
+## married     -4.025e+02  1.097e+03  -0.367  0.71392   
+## re74        -1.528e+00  5.640e-01  -2.710  0.00715 **
+## re75         2.488e-01  1.870e-01   1.331  0.18442   
+## I(age^2)    -8.000e+00  5.463e+00  -1.464  0.14424   
+## I(educ^2)    1.568e+02  7.793e+01   2.012  0.04512 * 
+## educ:re74    1.312e-01  4.691e-02   2.797  0.00551 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6587 on 283 degrees of freedom
+## Multiple R-squared:  0.1206, Adjusted R-squared:  0.08335 
+## F-statistic: 3.235 on 12 and 283 DF,  p-value: 0.0002222
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{psmatch7.mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(re78 }\OperatorTok{~}\StringTok{ }\NormalTok{treat }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{nodegr }\OperatorTok{+}\StringTok{ }\NormalTok{married }\OperatorTok{+}\StringTok{ }\NormalTok{re74 }\OperatorTok{+}\StringTok{ }\NormalTok{re75 }\OperatorTok{+}\StringTok{ }
+\StringTok{                     }\KeywordTok{I}\NormalTok{(age}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(educ}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{educ}\OperatorTok{:}\NormalTok{re74, }
+                   \DataTypeTok{data =}\NormalTok{ psmatch7.data, }\DataTypeTok{weights =}\NormalTok{ weights)}
+\KeywordTok{summary}\NormalTok{(psmatch7.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = re78 ~ treat + age + educ + black + hisp + nodegr + 
+##     married + re74 + re75 + I(age^2) + I(educ^2) + educ:re74, 
+##     data = psmatch7.data, weights = weights)
+## 
+## Weighted Residuals:
+##    Min     1Q Median     3Q    Max 
+## -12329  -4321  -1626   3077  53649 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)  6.251e+03  6.568e+03   0.952   0.3417  
+## treat        1.574e+03  6.642e+02   2.370   0.0183 *
+## age          3.046e+02  2.872e+02   1.061   0.2895  
+## educ        -1.836e+03  1.249e+03  -1.470   0.1424  
+## black       -2.482e+03  1.234e+03  -2.011   0.0450 *
+## hisp        -2.709e+02  1.815e+03  -0.149   0.8815  
+## nodegr       1.758e+03  1.234e+03   1.425   0.1550  
+## married     -2.365e+02  9.324e+02  -0.254   0.7999  
+## re74        -2.462e-01  3.067e-01  -0.803   0.4225  
+## re75         6.505e-02  1.449e-01   0.449   0.6538  
+## I(age^2)    -4.436e+00  4.626e+00  -0.959   0.3382  
+## I(educ^2)    1.208e+02  6.998e+01   1.726   0.0851 .
+## educ:re74    3.089e-02  2.924e-02   1.056   0.2915  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6602 on 397 degrees of freedom
+## Multiple R-squared:  0.05808,    Adjusted R-squared:  0.02961 
+## F-statistic:  2.04 on 12 and 397 DF,  p-value: 0.02002
+\end{verbatim}
+
+
+\end{document}
